@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从零学硬件 · HPM5321 高速隔离 USB-CAN FD 工具</title>
+<style>
+  :root{
+    --bg:#ffffff; --fg:#1f2933; --muted:#5b6b7b; --line:#e3e8ee;
+    --accent:#1565c0; --accent2:#00897b; --warn:#c0392b; --soft:#f4f7fb;
+    --chip:#fff3e0; --note:#e8f5e9; --codebg:#f5f7fa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
+       color:var(--fg);background:var(--bg);line-height:1.75;font-size:16px}
+  header.hero{background:linear-gradient(135deg,#0d47a1,#00897b);color:#fff;padding:48px 28px 36px}
+  header.hero h1{margin:0 0 8px;font-size:30px;font-weight:800;letter-spacing:1px}
+  header.hero p{margin:4px 0;opacity:.95}
+  header.hero .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+       padding:4px 12px;border-radius:20px;font-size:13px;margin:8px 8px 0 0}
+  .wrap{display:flex;max-width:1180px;margin:0 auto;padding:0 16px}
+  nav.toc{position:sticky;top:0;align-self:flex-start;width:260px;flex:none;padding:24px 16px 24px 0;
+       height:100vh;overflow:auto;border-right:1px solid var(--line);font-size:14px}
+  nav.toc h3{margin:0 0 10px;color:var(--accent);font-size:15px}
+  nav.toc a{display:block;color:var(--muted);text-decoration:none;padding:5px 8px;border-radius:6px}
+  nav.toc a:hover{background:var(--soft);color:var(--accent)}
+  nav.toc .sub{padding-left:16px;font-size:13px}
+  main{flex:1;min-width:0;padding:28px 8px 80px}
+  section{margin-bottom:46px;scroll-margin-top:16px}
+  h2{font-size:24px;border-left:6px solid var(--accent);padding-left:12px;margin:0 0 14px;color:#0d3a73}
+  h3{font-size:19px;color:var(--accent2);margin:26px 0 10px}
+  h4{font-size:16px;color:#37474f;margin:18px 0 6px}
+  p{margin:10px 0}
+  code{background:var(--codebg);padding:1px 6px;border-radius:4px;font-family:"Cascadia Code",Consolas,monospace;font-size:14px;color:#b71c1c}
+  ul,ol{margin:8px 0;padding-left:26px}
+  li{margin:5px 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--soft);color:#0d3a73;font-weight:700}
+  tr:nth-child(even) td{background:#fafcfd}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0}
+  .note{background:var(--note);border-left:5px solid var(--accent2);border-radius:8px;padding:12px 16px;margin:14px 0}
+  .note b{color:var(--accent2)}
+  .begin{border-left:5px solid var(--accent);border-radius:8px;background:#eef4fb;padding:12px 16px;margin:14px 0}
+  .begin b{color:var(--accent)}
+  .warn{border-left:5px solid var(--warn);background:#fdecea;border-radius:8px;padding:12px 16px;margin:14px 0}
+  .svgbox{border:1px solid var(--line);border-radius:12px;padding:14px;margin:16px 0;background:#fff;text-align:center}
+  .svgbox svg{max-width:100%;height:auto}
+  .cap{font-size:13px;color:var(--muted);margin-top:8px}
+  .chip{display:inline-block;background:var(--chip);border:1px solid #ffe0b2;border-radius:6px;
+       padding:2px 9px;font-size:13px;margin:2px;font-family:Consolas,monospace;color:#e65100}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){nav.toc{display:none}.two{grid-template-columns:1fr}}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:30px;border-top:1px solid var(--line)}
+  a.ext{color:var(--accent)}
+  .checklist{background:#fbfdff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .checklist .stage{font-weight:600;color:var(--ink);margin:14px 0 6px;font-size:14px}
+  .checklist .stage:first-child{margin-top:4px}
+  .checklist label{display:block;font-size:13.5px;line-height:1.9;color:var(--ink);cursor:pointer}
+  .checklist input[type=checkbox]{transform:translateY(2px);margin-right:8px;width:15px;height:15px}
+  @media print{.checklist label{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>从零学硬件：HPM5321 高速隔离 USB-CAN FD 工具</h1>
+  <p>一份写给小白的、以真实开源板卡为教材的硬件入门文档</p>
+  <p>内容：电子学基础 → 看懂原理图 → 拆解本板每个元件 → PCB 设计（入门到进阶）→ 动手烧录</p>
+  <div>
+    <span class="tag">开源项目：oshwhub.com/eda_kwazdnpkc/hpm5321_pcan</span>
+    <span class="tag">主控 HPM5321（RISC-V）</span>
+    <span class="tag">4 层板 · FR-4 1.6mm</span>
+    <span class="tag">CAN 电气隔离 1500V</span>
+    <span class="tag">兼容 PCAN-FD PRO</span>
+  </div>
+</header>
+
+<div class="wrap">
+<nav class="toc">
+  <h3>目录</h3>
+  <a href="#intro">0. 这块板子是干嘛的</a>
+  <a href="#basic">1. 硬件世界的基本语言</a>
+  <div class="sub"><a href="#b1">1.1 电压/电流/电阻</a><a href="#b2">1.2 电路与 GND</a><a href="#b3">1.3 什么是“网络”</a><a href="#b4">1.4 数字信号</a></div>
+  <a href="#parts">2. 电子元器件 ABC</a>
+  <div class="sub"><a href="#p-r">电阻/电容/电感</a><a href="#p-d">二极管/LED/TVS/ESD</a><a href="#p-x">晶振</a><a href="#p-conn">连接器/开关</a><a href="#p-ic">芯片/LDO/隔离</a></div>
+  <a href="#sch">3. 看懂原理图</a>
+  <div class="sub"><a href="#s1">3.1 符号 vs 封装</a><a href="#s2">3.2 位号与网络</a><a href="#s3">3.3 本板四张图</a></div>
+  <a href="#build">4. 本板功能模块拆解</a>
+  <div class="sub"><a href="#m-usb">USB 与供电</a><a href="#m-pwr">电源系统</a><a href="#m-iso">隔离屏障</a><a href="#m-can">CAN 收发</a><a href="#m-mcu">主控与配置</a></div>
+  <a href="#pcb0">5. PCB 入门</a>
+  <div class="sub"><a href="#pcb-a">什么是 PCB</a><a href="#pcb-b">层/焊盘/过孔</a><a href="#pcb-c">为什么 4 层</a><a href="#pcb-d">隔离与布局</a></div>
+  <a href="#pcb1">6. PCB 进阶实战</a>
+  <div class="sub"><a href="#ad-stack">叠层与阻抗</a><a href="#ad-diff">差分对</a><a href="#ad-drc">DRC 与工艺</a><a href="#ad-order">嘉立创下单</a></div>
+  <a href="#flow">7. 整机信号流向</a>
+  <a href="#solder">8. 动手：焊接与调试（小白实操）</a>
+  <div class="sub"><a href="#sol-ready">8.0 焊前准备</a><a href="#sol-1">8.1 被动元件</a><a href="#sol-2">8.2 连接器/ESD</a><a href="#sol-3">8.3 LED/开关</a><a href="#sol-4">8.4 电源★</a><a href="#sol-5">8.5 隔离/收发</a><a href="#sol-6">8.6 晶振</a><a href="#sol-7">8.7 QFN★</a><a href="#sol-8">8.8 通电烧录</a><a href="#sol-tip">8.9 万用表口诀</a></div>
+  <a href="#hands">9. 动手：烧录与驱动</a>
+  <a href="#bom">10. 完整 BOM 表（本工程实测）</a>
+  <a href="#gloss">11. 术语表 & 延伸阅读</a>
+</nav>
+
+<main>
+
+<section id="intro">
+  <h2>0. 这块板子是干嘛的</h2>
+  <p>你手上（或屏幕上）打开的，是一个<strong>“USB 转 CAN FD”</strong>的适配器。通俗地说：</p>
+  <ul>
+    <li>电脑只有 <strong>USB</strong> 口，但汽车、工业设备用的是 <strong>CAN / CAN FD</strong> 总线（一种汽车和工控里非常常见的“车内/设备间通信网线”）。</li>
+    <li>这块小板子夹在中间，把电脑发来的 USB 数据，“翻译”成 CAN 总线上的信号，让电脑能收发汽车/设备里的报文。反过来也一样。</li>
+    <li>它<strong>兼容 PCAN-FD PRO</strong>（一个著名的德国品牌产品），也就是说电脑上装对应的驱动和软件（PCAN-View / TSMaster 等）就能直接用它，不用自己写底层。</li>
+    <li>它支持 <strong>CAN FD</strong>（CAN 的升级版，数据段最高 8Mbps），并且对 CAN 侧做了 <strong>1500V 电气隔离</strong>——这是它最核心的设计亮点，后面会专门讲。</li>
+  </ul>
+  <div class="begin"><b>小白先记住一句话：</b>任何一块电路板，本质上都在做三件事——<b>取电（电源）</b>、<b>处理信息（芯片）</b>、<b>连接外面的世界（接口）</b>。看完这份文档，你会发现本板 every 元件都能归到这三类里。</div>
+  <div class="svgbox">
+    <svg viewBox="0 0 640 180" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="60" width="150" height="60" rx="8" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+      <text x="85" y="96" text-anchor="middle" font-size="15" fill="#0d3a73">电脑 (USB)</text>
+      <rect x="245" y="40" width="150" height="100" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="320" y="78" text-anchor="middle" font-size="14" fill="#e65100">HPM5321</text>
+      <text x="320" y="98" text-anchor="middle" font-size="12" fill="#5b6b7b">USB↔CAN</text>
+      <text x="320" y="116" text-anchor="middle" font-size="12" fill="#5b6b7b">+ 隔离</text>
+      <rect x="470" y="60" width="160" height="60" rx="8" fill="#e8f5e9" stroke="#00897b" stroke-width="2"/>
+      <text x="550" y="96" text-anchor="middle" font-size="14" fill="#00695c">汽车/设备 (CAN)</text>
+      <line x1="160" y1="90" x2="245" y2="90" stroke="#1565c0" stroke-width="3"/>
+      <line x1="395" y1="90" x2="470" y2="90" stroke="#00897b" stroke-width="3"/>
+      <text x="202" y="78" text-anchor="middle" font-size="11" fill="#5b6b7b">USB线</text>
+      <text x="432" y="78" text-anchor="middle" font-size="11" fill="#5b6b7b">CAN线(隔离)</text>
+    </svg>
+    <div class="cap">图 0-1：本板在系统里的位置——电脑与 CAN 世界之间的“翻译官”</div>
+  </div>
+</section>
+
+<section id="basic">
+  <h2>1. 硬件世界的基本语言</h2>
+  <p>在看原理图之前，先建立几个最基础的概念。这些概念每一个，后面都会用本板上的真实元件来举例。</p>
+
+  <h3 id="b1">1.1 电压、电流、电阻（欧姆定律）</h3>
+  <p>最经典的类比：把电看成<strong>水</strong>。</p>
+  <ul>
+    <li><b>电压（Voltage，单位 V 伏特）</b> = 水压。水压越高，水越有“冲劲”。电池/电源提供电压。</li>
+    <li><b>电流（Current，单位 A 安培）</b> = 水流量。单位时间内流过多少电荷。</li>
+    <li><b>电阻（Resistance，单位 Ω 欧姆）</b> = 水管粗细/弯头。阻碍电流。</li>
+  </ul>
+  <p>三者的关系叫 <strong>欧姆定律</strong>：<code>电压 = 电流 × 电阻</code>，即 <code>V = I × R</code>。</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- water tank -->
+      <rect x="40" y="30" width="90" height="120" rx="6" fill="#bbdefb" stroke="#1565c0" stroke-width="2"/>
+      <text x="85" y="95" text-anchor="middle" font-size="13" fill="#0d3a73">高水位</text>
+      <text x="85" y="112" text-anchor="middle" font-size="12" fill="#5b6b7b">(高电压)</text>
+      <path d="M130 70 H210" stroke="#1565c0" stroke-width="6" fill="none"/>
+      <rect x="210" y="55" width="40" height="30" rx="4" fill="#ffe0b2" stroke="#e65100" stroke-width="2"/>
+      <text x="230" y="76" text-anchor="middle" font-size="12" fill="#e65100">阻力</text>
+      <path d="M250 70 H330" stroke="#1565c0" stroke-width="3" fill="none"/>
+      <text x="290" y="60" text-anchor="middle" font-size="11" fill="#5b6b7b">细水流=小电流</text>
+      <circle cx="370" cy="70" r="14" fill="#1565c0"/>
+      <text x="370" y="74" text-anchor="middle" font-size="12" fill="#fff">灯</text>
+      <path d="M384 70 H440" stroke="#1565c0" stroke-width="3" fill="none"/>
+      <text x="430" y="160" text-anchor="middle" font-size="13" fill="#0d3a73">电压 V = 电流 I × 电阻 R</text>
+      <text x="85" y="170" text-anchor="middle" font-size="12" fill="#5b6b7b">↑水压越大越亮</text>
+    </svg>
+    <div class="cap">图 1-1：用水压/水流理解电压/电流/电阻</div>
+  </div>
+  <div class="note"><b>本板实例：</b>USB 口进来是 <span class="chip">5V</span>（VBUS），经过 <span class="chip">LDO1(ME6211)</span> 降到 <span class="chip">3.3V</span> 给主控芯片供电。如果某处电流太大、电阻太小，就会“短路”烧东西——所以板上到处是电阻和保险式的保护元件。</div>
+
+  <h3 id="b2">1.2 电路、GND 与“回路”</h3>
+  <p>电流必须<strong>有来有回</strong>才能流动，就像水要从管子出去还得流回来。电的“回来”的那条路，通常叫 <strong>GND（地 / Ground）</strong>。你可以把 GND 想象成“公共下水道/海平面”——所有电压的“0 基准”都参考它。</p>
+  <ul>
+    <li>板上你看到很多 <code>GND</code> 符号，它们都连在一起，是同一个“0 伏参考点”。</li>
+    <li>本板还有一个 <code>ISO_GND</code>——“隔离地”。它和 GND <b>不连通</b>，是实现隔离的关键（见模块 4.3）。</li>
+  </ul>
+
+  <h3 id="b3">1.3 什么是“网络（Net）”</h3>
+  <p>原理图里，凡是被一根线（或同一个网络标号）连起来的所有引脚，在物理上就是<strong>连在一起的同一根导线</strong>，这在 EDA 里叫一个 <b>网络（Net）</b>。</p>
+  <div class="begin"><b>小白重点：</b>原理图上的“线”不是真的线，而是“这些点属于同一个网络”的声明。比如所有标着 <code>3V3</code> 的地方，最后在 PCB 上都会用铜皮连起来，给芯片供 3.3V。网络名相同 = 电气连通。</div>
+  <p>本板核心网络（从工程里读到的真实网络名）：</p>
+  <div class="card">
+    <span class="chip">5V</span>（USB 进来系统 5V） &nbsp;
+    <span class="chip">3V3</span>（LDO 出来的 3.3V） &nbsp;
+    <span class="chip">ISO_5V</span>（隔离侧的 5V） &nbsp;
+    <span class="chip">GND</span>（系统地） &nbsp;
+    <span class="chip">ISO_GND</span>（隔离地）<br>
+    还有 MCU 内部电源域：<span class="chip">VIO</span> <span class="chip">VANA</span> <span class="chip">VPMC</span> <span class="chip">VREFH</span> <span class="chip">VSOC</span> <span class="chip">VDD_PMCCAP</span> <span class="chip">VDD_OTPCAP</span> <span class="chip">DCDC_LP</span> —— 这些是 HPM5321 芯片内部不同模块的供电脚。
+  </div>
+
+  <h3 id="b4">1.4 数字信号：0 和 1 怎么传</h3>
+  <p>芯片之间不传“模拟水”，而传<strong>高/低电平</strong>：比如 3.3V 代表“1”，0V（GND）代表“0”。一串 0/1 就是数据。CAN 总线更特殊，它用<strong>两根线之间的电压差</strong>来表示 0/1（差分信号），抗干扰强——这正是 CAN 能在汽车这种“电噪声很大”的环境里可靠工作的原因。</p>
+</section>
+
+<section id="parts">
+  <h2>2. 电子元器件 ABC</h2>
+  <p>下面逐个认识本板用到的元件类型。<b>每一类都配了本板上的真实型号。</b></p>
+
+  <h3 id="p-r">2.1 电阻 R / 电容 C / 电感 L</h3>
+  <div class="two">
+    <div class="card">
+      <h4>电阻 Resistor（位号 R）</h4>
+      <p>阻碍电流。阻值单位 Ω（欧姆）、kΩ（千欧）。本板有：</p>
+      <ul>
+        <li><span class="chip">R8 R9 = 120Ω</span>：CAN 总线终端电阻</li>
+        <li><span class="chip">R10 R11 = 5.1kΩ</span>：USB-C 的 CC 配置电阻</li>
+        <li><span class="chip">R1-R4 = 5.1kΩ</span>：MCU 配置/上下拉</li>
+        <li><span class="chip">R5-R7 = 10kΩ</span>：上拉电阻</li>
+      </ul>
+      <p>封装从 <code>R0402</code>(1.0×0.5mm) 到 <code>R0805</code>(2.0×1.25mm) 不等，越小越省空间。</p>
+    </div>
+    <div class="card">
+      <h4>电容 Capacitor（位号 C）</h4>
+      <p>“储电小水箱”，用来<b>滤波、退耦、稳压</b>。本板有约 30 颗：</p>
+      <ul>
+        <li><span class="chip">100nF(C0603)</span> ×14：退耦电容，紧贴每个电源脚，滤高频噪声</li>
+        <li><span class="chip">10uF / 4.7uF / 22uF / 1uF</span>：电源滤波</li>
+        <li><span class="chip">22pF(C1 C2)</span>：晶振负载电容</li>
+      </ul>
+      <p>“退耦”= 在芯片电源脚旁放一颗小电容，像给芯片配个“小水库”，电压一抖就由它补上，不让芯片重启/出错。</p>
+    </div>
+  </div>
+  <div class="card">
+    <h4>电感 Inductor（位号 L）</h4>
+    <p>“阻交流、通直流”的线圈。<span class="chip">L1 = 4.7uH</span> 是 HPM5321 内部 DCDC 的<b>功率电感</b>，配合电容把电压降到内核所需的低压大电流。电感值和电流/饱和电流是关键参数。</p>
+  </div>
+
+  <h3 id="p-d">2.2 二极管：LED / TVS / ESD（位号 D）</h3>
+  <p>二极管只让电流<b>单向</b>通过，像“单向阀”。本板用了三种二极管：</p>
+  <ul>
+    <li><b>LED（发光二极管）</b>：<span class="chip">D1 D2</span>（黄绿色，直插）。正向导通约 2V，串电阻限流后发光，作状态指示。</li>
+    <li><b>TVS（瞬态抑制二极管）</b>：<span class="chip">D3</span>（SOD-123，5V）。平时开路，一旦电压被浪涌（雷击/插拔火花）冲高，它立刻“击穿”把高压泄放到地，保护后级。参数：Vrwm 5V、钳位 9.2V、Ipp 21.7A。</li>
+    <li><b>ESD（静电保护二极管）</b>：<span class="chip">D4 D5</span>（SOT-23-3）、<span class="chip">D6</span>（SOT-23-6，5V）。专门防人体静电（几千伏瞬间放电）打坏敏感引脚，常用于 USB、CAN 对外接口。</li>
+  </ul>
+
+  <h3 id="p-x">2.3 晶振 Crystal（位号 X / Y）</h3>
+  <p><span class="chip">X1 = 24MHz</span> 晶振（负载 12pF，±10ppm）。它像一个极精准的“节拍器”，给 MCU 提供主时钟。没有它，芯片就不知道“一秒有多长”，通信全乱。旁边的 <span class="chip">C1 C2 = 22pF</span> 是它的“负载电容”，帮助起振。</p>
+
+  <h3 id="p-conn">2.4 连接器 & 开关（位号 CN / USB / H / SW）</h3>
+  <ul>
+    <li><b>USB 母座</b>：<span class="chip">USB1</span>（Type-C，16 脚，卧贴）。对外的 USB 接口，同时取电+通信。</li>
+    <li><b>接线端子</b>：<span class="chip">CN1 CN2</span>（3.81mm 间距，3P，绿色弯针）。把 CAN 的 CANH / CANL / GND 接到外部总线，免焊接、可插拔。</li>
+    <li><b>排针</b>：<span class="chip">H1</span>（1×8，2.54mm）。调试/烧录串口，接“串口转 USB 工具”给芯片刷固件。</li>
+    <li><b>开关</b>：<span class="chip">SW1</span>（4 位拨码，SMD）用于功能/地址配置；<span class="chip">SW2</span>（2 位琴键）用于切换 CAN 终端电阻 120Ω 是否接入。</li>
+  </ul>
+
+  <h3 id="p-ic">2.5 芯片：MCU / LDO / 隔离器 / 收发器（位号 U）</h3>
+  <div class="two">
+    <div class="card">
+      <h4>MCU 微控制器（大脑）</h4>
+      <p><span class="chip">U1 = HPM5321</span>（QFN-48，RISC-V 架构，主频高、带 USB 高速和 2 路 CAN-FD）。它跑固件，把 USB 数据包转成 CAN 帧。相当于整块板的“CPU”。</p>
+    </div>
+    <div class="card">
+      <h4>LDO 线性稳压器（降压）</h4>
+      <p><span class="chip">LDO1 = ME6211</span>（SOT-23-5）。把 5V 稳稳降到 3.3V，最大 500mA。原理像“可调水龙头”，输入高输出低，多余的能量变成热量散掉。简单、干净、便宜。</p>
+    </div>
+    <div class="card">
+      <h4>隔离 DC-DC（隔离电源）</h4>
+      <p><span class="chip">U2 = B0505S-1WR3</span>。输入 5V、输出隔离的 5V（200mA），两侧<b>不共地</b>，隔离电压 1500V。给“隔离侧”单独供电，是实现 CAN 隔离的核心之一。</p>
+    </div>
+    <div class="card">
+      <h4>数字隔离器（信号隔离）</h4>
+      <p><span class="chip">U5 = CA-IS3742HW</span>（SOIC-16，4 通道）。像“用光/电场隔开的传送带”，把 MCU 侧的 TX/RX 数字信号“隔空”传到隔离侧，两侧地不连。配合 U2 实现完整 1500V 隔离。</p>
+    </div>
+  </div>
+  <div class="card">
+    <h4>CAN-FD 收发器（电平翻译）</h4>
+    <p><span class="chip">U3 U4 = SIT1042</span>（SOP-8）×2。MCU 的 TX/RX 是普通逻辑电平，CAN 总线是“差分”的。收发器负责两边互译：MCU 说“1”，它在 CANH/CANL 上制造一个电压差；反过来也行。每路 CAN 通道一颗。</p>
+  </div>
+</section>
+
+<section id="sch">
+  <h2>3. 看懂原理图</h2>
+
+  <h3 id="s1">3.1 原理图符号 vs PCB 封装</h3>
+  <p>同一个元件在三个地方长不一样：</p>
+  <ul>
+    <li><b>原理图符号（Symbol）</b>：画逻辑连接用的“简图”，比如电阻画成一个小矩形。重在“连哪几个脚”。</li>
+    <li><b>PCB 封装（Footprint）</b>：元件在板子上的真实“焊盘形状”，比如 <code>C0603</code> 表示 0603 规格（1.6×0.8mm）的两个焊盘。重在“怎么焊”。</li>
+    <li><b>实物</b>：你手上焊上去的那颗料。</li>
+  </ul>
+  <div class="begin"><b>小白记法：</b>Symbol 是“身份证照”（用来连线），Footprint 是“座位”（用来焊接）。本板里 <span class="chip">R0603</span> 这种写的是封装名，告诉你它占多大地方。</div>
+
+  <h3 id="s2">3.2 位号（Designator）与网络</h3>
+  <p>原理图里每个元件都有<strong>位号</strong>，首字母代表类型：</p>
+  <table>
+    <tr><th>首字母</th><th>类型</th><th>本板例子</th></tr>
+    <tr><td>R</td><td>电阻</td><td>R1–R11</td></tr>
+    <tr><td>C</td><td>电容</td><td>C1–C29</td></tr>
+    <tr><td>L</td><td>电感</td><td>L1</td></tr>
+    <tr><td>D</td><td>二极管</td><td>D1–D6</td></tr>
+    <tr><td>U</td><td>芯片/IC</td><td>U1–U5</td></tr>
+    <tr><td>X</td><td>晶振</td><td>X1</td></tr>
+    <tr><td>CN / USB</td><td>连接器</td><td>CN1 CN2 USB1</td></tr>
+    <tr><td>H</td><td>排针</td><td>H1</td></tr>
+    <tr><td>SW</td><td>开关</td><td>SW1 SW2</td></tr>
+  </table>
+  <p>位号后面的数字只是“第几颗”，本身不含功能信息。功能看它接在哪个<b>网络</b>上。</p>
+
+  <h3 id="s3">3.3 本工程原理图的四张图</h3>
+  <p>作者把整块板拆成 4 页原理图（这是<b>分图</b>，不是 4 块板），方便阅读：</p>
+  <table>
+    <tr><th>页名</th><th>内容</th><th>主要元件</th></tr>
+    <tr><td>CORE</td><td>主控核心</td><td>U1(HPM5321)、X1、L1、大量退耦电容、LED、拨码、排针</td></tr>
+    <tr><td>USB</td><td>USB 接口与保护</td><td>USB1、R10/R11(CC)、D6(ESD)</td></tr>
+    <tr><td>CAN/POWER</td><td>电源 + CAN 收发 + 隔离</td><td>LDO1、U2(隔离DC-DC)、U5(隔离器)、U3/U4(收发器)、CN1/CN2、R8/R9、SW2、TVS/ESD</td></tr>
+    <tr><td>CHANGELOG</td><td>版本/说明（无实际电路）</td><td>仅标题栏信息</td></tr>
+  </table>
+  <div class="note"><b>为什么分图？</b>大板子一张图放不下也不好看。按“功能区块”分页，每页内部网络用<strong>网络标号</strong>（如 <code>3V3</code>、<code>CAN1_TX</code>）跨页连接——标号相同即连通，不用画一长根飞线。</div>
+</section>
+
+<section id="build">
+  <h2>4. 本板功能模块拆解（重头戏）</h2>
+  <p>现在把整块板像拆乐高一样拆开。下面这张框图是灵魂，建议反复看：</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg" font-size="12">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#37474f"/>
+        </marker>
+      </defs>
+      <!-- left: PC -->
+      <rect x="10" y="170" width="110" height="60" rx="8" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+      <text x="65" y="196" text-anchor="middle" fill="#0d3a73">电脑</text>
+      <text x="65" y="214" text-anchor="middle" fill="#5b6b7b">USB</text>
+      <!-- USB section -->
+      <rect x="150" y="150" width="150" height="100" rx="10" fill="#fff8e1" stroke="#e65100" stroke-width="2"/>
+      <text x="225" y="170" text-anchor="middle" fill="#e65100">USB 接口区</text>
+      <text x="225" y="190" text-anchor="middle">USB1 Type-C</text>
+      <text x="225" y="206" text-anchor="middle">R10/R11 5.1k</text>
+      <text x="225" y="222" text-anchor="middle">D6 ESD</text>
+      <text x="225" y="240" text-anchor="middle" fill="#5b6b7b">取电→5V</text>
+      <!-- MCU -->
+      <rect x="330" y="120" width="150" height="120" rx="10" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="405" y="142" text-anchor="middle" fill="#e65100">U1 HPM5321</text>
+      <text x="405" y="160" text-anchor="middle">RISC-V 主控</text>
+      <text x="405" y="176" text-anchor="middle">X1 24MHz + L1</text>
+      <text x="405" y="192" text-anchor="middle">大量退耦 C</text>
+      <text x="405" y="208" text-anchor="middle">USB 控制器</text>
+      <text x="405" y="224" text-anchor="middle">2×CAN-FD</text>
+      <!-- power -->
+      <rect x="330" y="270" width="150" height="70" rx="10" fill="#e8f5e9" stroke="#00897b" stroke-width="2"/>
+      <text x="405" y="290" text-anchor="middle" fill="#00695c">电源区</text>
+      <text x="405" y="308" text-anchor="middle">LDO1 5V→3V3</text>
+      <text x="405" y="324" text-anchor="middle">U2 隔离 5V</text>
+      <!-- isolation barrier -->
+      <line x1="505" y1="100" x2="505" y2="360" stroke="#c0392b" stroke-width="3" stroke-dasharray="6 4"/>
+      <text x="513" y="110" fill="#c0392b" font-size="11">隔离屏障</text>
+      <text x="513" y="126" fill="#c0392b" font-size="11">1500V</text>
+      <!-- isolator -->
+      <rect x="525" y="180" width="130" height="50" rx="8" fill="#fce4ec" stroke="#c0392b" stroke-width="2"/>
+      <text x="590" y="200" text-anchor="middle" fill="#c0392b">U5 隔离器</text>
+      <text x="590" y="218" text-anchor="middle" fill="#5b6b7b">CA-IS3742</text>
+      <!-- transceivers -->
+      <rect x="525" y="245" width="130" height="50" rx="8" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+      <text x="590" y="265" text-anchor="middle" fill="#6a1b9a">U3/U4 收发器</text>
+      <text x="590" y="283" text-anchor="middle" fill="#5b6b7b">SIT1042 ×2</text>
+      <!-- terminal -->
+      <rect x="525" y="310" width="130" height="46" rx="8" fill="#e0f7fa" stroke="#00838f" stroke-width="2"/>
+      <text x="590" y="330" text-anchor="middle" fill="#00838f">CN1/CN2 端子</text>
+      <text x="590" y="348" text-anchor="middle" fill="#5b6b7b">外接 CAN 总线</text>
+      <!-- arrows -->
+      <line x1="120" y1="200" x2="150" y2="200" stroke="#37474f" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="300" y1="200" x2="330" y2="180" stroke="#37474f" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="480" y1="180" x2="525" y2="205" stroke="#37474f" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="590" y1="230" x2="590" y2="245" stroke="#37474f" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="590" y1="295" x2="590" y2="310" stroke="#37474f" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="480" y1="305" x2="525" y2="305" stroke="#37474f" stroke-width="2" marker-end="url(#ar)"/>
+    </svg>
+    <div class="cap">图 4-1：本板功能框图——红色虚线是 1500V 隔离屏障，屏障右侧（CAN 侧）与左侧（电脑/MCU 侧）电气上完全隔开</div>
+  </div>
+
+  <h3 id="m-usb">4.1 USB 接口与供电（USB 页 + CAN/POWER 页）</h3>
+  <ul>
+    <li><span class="chip">USB1</span>：插上电脑后，电脑通过 VBUS 给板子供 <b>5V</b>（本板网络 <code>5V</code> / <code>VBUS_5V</code>）。同时 USB 数据线（D+/D- 或本板的 USB 高速差分对）与电脑通信。</li>
+    <li><span class="chip">R10 R11 = 5.1kΩ</span>：Type-C 的 <b>CC1/CC2</b> 脚下拉电阻。它告诉电脑“我是一个需要供电的设备（sink）”，并参与供电能力协商。没有它，电脑可能不给你供电。</li>
+    <li><span class="chip">D6</span>：ESD 保护，防止插拔 USB 时的静电打坏芯片。</li>
+  </ul>
+  <div class="note"><b>USB 高速差分对：</b>HPM5321 的 USB 是“高速（480Mbps）”模式，数据走一对线 <code>USBHS_DP / USBHS_DM</code>（以及可能的第二对 <code>_S</code>）。这对线是“差分对”，在 PCB 上必须按 <b>90Ω 差分阻抗</b>走线（见模块 6）。</div>
+
+  <h3 id="m-pwr">4.2 电源系统（CAN/POWER 页）</h3>
+  <p>进来的 5V 一分为二：</p>
+  <table>
+    <tr><th>路径</th><th>元件</th><th>作用</th></tr>
+    <tr><td>非隔离侧（给 MCU）</td><td><span class="chip">LDO1 ME6211</span></td><td>5V → 3.3V（<code>3V3</code>），给 HPM5321 的 IO/数字部分供电，500mA 够用</td></tr>
+    <tr><td>隔离侧（给 CAN 侧）</td><td><span class="chip">U2 B0505S</span></td><td>5V → 隔离 5V（<code>ISO_5V</code>），两侧不共地，实现隔离供电</td></tr>
+  </table>
+  <p><b>滤波/退耦电容：</b><span class="chip">C22–C29</span> 等围绕稳压器做输入/输出滤波（1uF、10uF、100nF 组合），让电压平稳、不被干扰。这些“小水箱”是电源质量的保证。</p>
+
+  <h3 id="m-iso">4.3 隔离屏障（本板最值钱的设计）</h3>
+  <p><b>为什么需要隔离？</b>汽车/工业 CAN 总线可能带几十伏甚至上千伏的共模干扰、地电位差、浪涌。如果板和电脑直接共地，这些高压会顺着 USB 线窜进你昂贵的电脑，烧接口甚至伤人。隔离让“信号能过去，电过不去”。</p>
+  <div class="two">
+    <div class="card">
+      <h4>两件套实现隔离</h4>
+      <ul>
+        <li><span class="chip">U2 B0505S</span>：隔离<b>电源</b>（能量隔离）</li>
+        <li><span class="chip">U5 CA-IS3742HW</span>：隔离<b>信号</b>（4 通道数字隔离器，把 TX/RX 隔空传过去）</li>
+      </ul>
+      <p>两者配合，CAN 侧（<code>ISO_5V</code>/<code>ISO_GND</code>）与电脑侧（<code>5V</code>/<code>GND</code>）在电气上彻底分开，额定隔离 1500V。</p>
+    </div>
+    <div class="card">
+      <h4>PCB 上怎么体现</h4>
+      <p>在板子上，隔离器两侧之间会留出一条<b>“隔离带”</b>——这条缝里不放铜、不走线、加大间距，满足<strong>爬电距离（creepage）</strong>和<strong>电气间隙（clearance）</strong>要求，才能保证 1500V 不击穿。这就是图 4-1 红虚线的物理意义。</p>
+    </div>
+  </div>
+
+  <h3 id="m-can">4.4 CAN 收发（CAN/POWER 页）</h3>
+  <ul>
+    <li><span class="chip">U3 U4 = SIT1042</span>：两路 CAN-FD 收发器，把 MCU 的逻辑 TX/RX 变成 CAN 总线上的差分信号 CANH/CANL。</li>
+    <li><span class="chip">CN1 CN2</span>：3.81mm 绿色接线端子，引出 CANH / CANL / GND 接外部总线（每路一个通道）。</li>
+    <li><span class="chip">R8 R9 = 120Ω</span>：CAN 总线<b>终端电阻</b>。CAN 是 120Ω  characteristic impedance 的总线，两端各放 120Ω 吸收信号反射。本板把它<b>内置</b>了。</li>
+    <li><span class="chip">SW2</span>：2 位琴键开关，<b>切换 120Ω 是否接入</b>。标准做法：总线两端各有一个终端，中间节点不加。所以板子做开关让你按实际接线决定。</li>
+    <li><span class="chip">D3(TVS) D4 D5(ESD)</span>：保护 CAN 引脚免受浪涌和静电。</li>
+  </ul>
+
+  <h3 id="m-mcu">4.5 主控与配置（CORE 页）</h3>
+  <ul>
+    <li><span class="chip">U1 HPM5321</span>：RISC-V 主控，运行固件做 USB↔CAN 协议转换。它内部有 USB 高速 PHY 和 2 路 MCAN 控制器。</li>
+    <li><span class="chip">X1 24MHz</span> + <span class="chip">C1 C2 22pF</span>：主时钟。</li>
+    <li><span class="chip">L1 4.7uH</span> + <span class="chip">C20 C21 22uF</span>：内部 DCDC（<code>DCDC_LP</code> 网络）给内核供电。</li>
+    <li><span class="chip">C3–C19 等 100nF ×14</span>：几乎每个电源脚旁一颗退耦电容。</li>
+    <li><span class="chip">R1–R4 = 5.1kΩ</span>、<span class="chip">R5–R7 = 10kΩ</span>：启动配置/上下拉电阻（设置 MCU 上电从哪里启动、引脚默认电平）。</li>
+    <li><span class="chip">SW1</span>：4 位拨码开关，用于功能/通道配置。</li>
+    <li><span class="chip">H1</span>：1×8 排针，接串口转 USB 工具，用于<b>烧录固件</b>和调试。</li>
+    <li><span class="chip">D1 D2</span>：状态 LED（比如指示通道活动）。</li>
+  </ul>
+</section>
+
+<section id="pcb0">
+  <h2>5. PCB 设计入门</h2>
+
+  <h3 id="pcb-a">5.1 什么是 PCB</h3>
+  <p><b>PCB（Printed Circuit Board，印刷电路板）</b>就是那块绿色的板子。原理图告诉你“谁和谁连”，PCB 把这种连接变成板子上的<b>铜皮走线</b>，并把元件焊接固定。</p>
+  <div class="begin"><b>小白记法：</b>原理图 = 电路“接线图”（逻辑）；PCB = 板子“实物布局图”（物理）。EDA 软件会根据原理图的“网络”自动在 PCB 里连接对应焊盘。</div>
+
+  <h3 id="pcb-b">5.2 层、焊盘、过孔</h3>
+  <ul>
+    <li><b>层（Layer）</b>：PCB 不只是“一层”。像本板是 <b>4 层板</b>——有 4 张铜皮叠在一起，中间用绝缘的 FR-4 隔开。</li>
+    <li><b>焊盘（Pad）</b>：元件引脚要焊上去的“铜小块”。封装（Footprint）本质就是焊盘的集合。</li>
+    <li><b>过孔（Via）</b>：打穿板子的金属小孔，用来把信号从一层“换”到另一层，像立交桥。</li>
+    <li><b>丝印（Silkscreen）</b>：板子表面白色的字（R1、U1 等），方便焊接和维修。</li>
+    <li><b>阻焊（Solder Mask）</b>：绿色（或别的颜色）的漆，盖住不需要焊接的铜，只在焊盘开窗，防止短路和氧化。</li>
+  </ul>
+
+  <h3 id="pcb-c">5.3 为什么用 4 层板而不是 2 层</h3>
+  <p>2 层板只有顶/底两层铜，所有走线和电源/地都挤在两面，密集时很难布通，且地不完整。4 层板通常把中间两层专门做成 <b>完整的地平面（GND Plane）</b> 和 <b>电源平面（PWR Plane）</b>：</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 680 450" xmlns="http://www.w3.org/2000/svg" width="100%" font-family="PingFang SC, Microsoft YaHei, Segoe UI, Arial, sans-serif" role="img">
+      <title>4 层板剖面图</title>
+      <desc>本板实测有 4 个铜层：Top、Inner1、Inner2、Bottom，中间夹 FR-4 介质</desc>
+      <text x="40" y="34" font-size="15" font-weight="500" fill="#1b1b1b">4 层板剖面（本板实测 numCopperLayers = 4）</text>
+      <text x="40" y="54" font-size="12" fill="#5f5e5a">从上到下：顶层信号 · 内层1(GND) · 内层2(Power) · 底层信号，中间夹 FR-4 介质</text>
+
+      <rect x="130" y="80" width="330" height="10" fill="#D3D1C7" stroke="#888780" stroke-width="0.5"/>
+      <text x="120" y="89" font-size="12" fill="#2c2c2a" text-anchor="end">顶层阻焊</text>
+      <text x="475" y="89" font-size="12" fill="#5f5e5a">绝缘保护膜（绿油，非铜）</text>
+
+      <rect x="130" y="92" width="330" height="26" fill="#639922" stroke="#444" stroke-width="0.5"/>
+      <text x="120" y="108" font-size="12" font-weight="500" fill="#2c2c2a" text-anchor="end">顶层 Top</text>
+      <text x="475" y="108" font-size="12" fill="#2c2c2a">信号层：焊元件 + 走线 ①</text>
+
+      <rect x="130" y="120" width="330" height="28" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+      <text x="120" y="138" font-size="12" fill="#2c2c2a" text-anchor="end">半固化片</text>
+      <text x="475" y="138" font-size="12" fill="#5f5e5a">FR-4 介质（绝缘）</text>
+
+      <rect x="130" y="150" width="330" height="26" fill="#378ADD" stroke="#444" stroke-width="0.5"/>
+      <text x="120" y="166" font-size="12" font-weight="500" fill="#2c2c2a" text-anchor="end">内层1 Inner1</text>
+      <text x="475" y="166" font-size="12" fill="#2c2c2a">GND 平面（整层接地）②</text>
+
+      <rect x="130" y="178" width="330" height="28" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+      <text x="120" y="196" font-size="12" fill="#2c2c2a" text-anchor="end">芯板 Core</text>
+      <text x="475" y="196" font-size="12" fill="#5f5e5a">FR-4 介质（绝缘）</text>
+
+      <rect x="130" y="208" width="330" height="26" fill="#E24B4A" stroke="#444" stroke-width="0.5"/>
+      <text x="120" y="224" font-size="12" font-weight="500" fill="#2c2c2a" text-anchor="end">内层2 Inner2</text>
+      <text x="475" y="224" font-size="12" fill="#2c2c2a">Power 平面 / 信号 ③</text>
+
+      <rect x="130" y="236" width="330" height="28" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+      <text x="120" y="254" font-size="12" fill="#2c2c2a" text-anchor="end">半固化片</text>
+      <text x="475" y="254" font-size="12" fill="#5f5e5a">FR-4 介质（绝缘）</text>
+
+      <rect x="130" y="266" width="330" height="26" fill="#639922" stroke="#444" stroke-width="0.5"/>
+      <text x="120" y="282" font-size="12" font-weight="500" fill="#2c2c2a" text-anchor="end">底层 Bottom</text>
+      <text x="475" y="282" font-size="12" fill="#2c2c2a">信号层：走线 ④</text>
+
+      <rect x="130" y="294" width="330" height="10" fill="#D3D1C7" stroke="#888780" stroke-width="0.5"/>
+      <text x="120" y="303" font-size="12" fill="#2c2c2a" text-anchor="end">底层阻焊</text>
+      <text x="475" y="303" font-size="12" fill="#5f5e5a">绝缘保护膜（绿油，非铜）</text>
+
+      <rect x="40" y="330" width="14" height="14" fill="#639922"/>
+      <text x="60" y="341" font-size="12" fill="#2c2c2a">信号铜层</text>
+      <rect x="160" y="330" width="14" height="14" fill="#378ADD"/>
+      <text x="180" y="341" font-size="12" fill="#2c2c2a">GND 平面</text>
+      <rect x="300" y="330" width="14" height="14" fill="#E24B4A"/>
+      <text x="320" y="341" font-size="12" fill="#2c2c2a">Power 平面</text>
+      <rect x="440" y="330" width="14" height="14" fill="#FAC775" stroke="#BA7517" stroke-width="0.5"/>
+      <text x="460" y="341" font-size="12" fill="#2c2c2a">FR-4 介质</text>
+      <rect x="40" y="356" width="14" height="14" fill="#D3D1C7" stroke="#888780" stroke-width="0.5"/>
+      <text x="60" y="367" font-size="12" fill="#2c2c2a">阻焊层</text>
+
+      <rect x="40" y="388" width="600" height="40" rx="8" fill="#EAF3DE" stroke="#639922" stroke-width="0.5"/>
+      <text x="56" y="404" font-size="13" font-weight="500" fill="#27500A">结论：数铜层数量 = 层数。本板 Top + Inner1 + Inner2 + Bottom = 4 个铜层 = 4 层板</text>
+      <text x="56" y="422" font-size="12" fill="#3B6D11">判断口诀：只看铜层（信号层/平面层），阻焊、丝印、介质都不算"层"</text>
+    </svg>
+    <div class="cap">图 5-1：本板 4 层板实测剖面——绿色为信号铜层、蓝色为 GND 平面、红色为 Power 平面、黄色为 FR-4 绝缘介质，灰色为阻焊层。只数铜层，本板 4 个 = 4 层板</div>
+  </div>
+  <ul>
+    <li>完整的地平面 = 信号有稳定“回流路径”，<b>抗干扰强、EMC 好</b>。</li>
+    <li>电源平面 = 供电均匀、阻抗低。</li>
+    <li>本板元件多（约 60 个 PCB 封装）、有高速 USB 和隔离要求，用 4 层是合理选择。</li>
+  </ul>
+
+  <h4>5.3.1 实操：在嘉立创 EDA 里怎么看层数（小白必会）</h4>
+  <p>看完上面的理论，你肯定想在软件里自己确认一下"到底是不是 4 层"。最准确的方法就是看右侧的「层管理」面板——记住一句话：<b>只看「铜箔」分组，不看「其他」分组</b>。</p>
+  <div class="card">
+    <h4>看「铜箔」分组直接数（最推荐）</h4>
+    <p>在 PCB 编辑界面，右侧「层管理」面板会把所有层分成 <b>「铜箔」</b> 和 <b>「其他」</b> 两组：</p>
+    <ul>
+      <li><b>铜箔组</b>：列出所有含铜的层。本板显示 <span class="chip">1 顶层</span> <span class="chip">15 内层1</span> <span class="chip">16 内层2</span> <span class="chip">2 底层</span> → 共 <b>4 个铜层 = 4 层板</b>。</li>
+      <li><b>其他组</b>：列出丝印层、阻焊层、锡膏层、装配层、板框层等（本板显示为「12 多层」）。这些都不含金属铜，<b>不算层数</b>。</li>
+    </ul>
+    <p>所以你不用自己费劲分辨哪些是装饰层——软件已经用「铜箔 / 其他」分好类了，你只数「铜箔」里有几项就完事。</p>
+  </div>
+  <div class="begin">
+    <b>另外 3 种辅助看法：</b>
+    <ol>
+      <li><b>底部层标签栏</b>：画布正下方有一排可点的层标签，能看到「顶层 · 内层1 · 内层2 · 底层」，有几个铜层标签就是几层，比数菜单还快。</li>
+      <li><b>顶部菜单「设计 → 层管理 / 叠层管理」</b>：弹出完整的叠层剖面（L1 / L2 / L3 / L4… 加每层厚度、材质），这是最"权威"的查看方式。</li>
+      <li><b>板子信息 / 属性面板</b>：选中板框（Board Outline），在属性里翻到「层数」字段，会直接写 <code>4</code>。</li>
+    </ol>
+  </div>
+  <div class="note"><b>一句话口诀：</b>嘉立创 EDA「层管理」面板的「铜箔」分组下有几项，就是几层板。本板 = 4 项 = 4 层板。带丝印、阻焊、锡膏、装配字样的层都不算。</div>
+
+  <h3 id="pcb-d">5.4 隔离与布局（本板特色）</h3>
+  <p>因为要 1500V 隔离，PCB 布局上把板子分成<strong>两个区域</strong>：</p>
+  <ul>
+    <li><b>非隔离区</b>：USB、MCU、LDO、电脑侧地（<code>GND</code>）。</li>
+    <li><b>隔离区</b>：隔离电源 U2、隔离器 U5、收发器 U3/U4、端子 CN1/CN2、隔离地（<code>ISO_GND</code>）。</li>
+  </ul>
+  <p>两区之间画一条<strong>隔离槽/禁布带</strong>，物理上保证爬电距离。元件摆放也遵循“信号从 MCU → 隔离器 → 收发器 → 端子”的顺序，一路单向走，避免交叉耦合。</p>
+  <div class="warn"><b>安全提醒：</b>隔离的可靠性 90% 取决于 PCB 上的间距和隔离带，不是只看芯片标称 1500V。layout 时这条缝不能随便被丝印、测试点、走线跨越。</div>
+</section>
+
+<section id="pcb1">
+  <h2>6. PCB 设计进阶实战</h2>
+
+  <h3 id="ad-stack">6.1 叠层与阻抗控制</h3>
+  <p>典型 4 层板叠层（从上到下）：</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 520 230" xmlns="http://www.w3.org/2000/svg">
+      <rect x="60" y="20" width="400" height="34" rx="4" fill="#1565c0"/><text x="260" y="42" text-anchor="middle" fill="#fff">L1 TOP — 信号层（放元件+走线）</text>
+      <rect x="60" y="64" width="400" height="30" rx="4" fill="#90a4ae"/><text x="260" y="84" text-anchor="middle" fill="#fff">L2 — GND 地平面（完整铜皮）</text>
+      <rect x="60" y="104" width="400" height="30" rx="4" fill="#00897b"/><text x="260" y="124" text-anchor="middle" fill="#fff">L3 — PWR 电源平面（3.3V/5V/ISO_5V 分区）</text>
+      <rect x="60" y="144" width="400" height="34" rx="4" fill="#1565c0"/><text x="260" y="166" text-anchor="middle" fill="#fff">L4 BOTTOM — 信号层（走线）</text>
+      <text x="260" y="200" text-anchor="middle" fill="#5b6b7b">FR-4 介质（1.6mm 总厚，层间约 0.2–0.3mm）</text>
+    </svg>
+    <div class="cap">图 6-1：典型 4 层板叠层示意（本板采用类似结构，隔离电源在 L3 上与系统地分区隔离）</div>
+  </div>
+  <p><b>阻抗控制是什么？</b>高速信号（如 USB 差分对）对“线看起来像多少欧姆”很敏感。如果阻抗不匹配，信号会在端点反射、变形，导致通信错误。USB 高速差分对要求 <b>90Ω 差分阻抗</b>。</p>
+  <div class="note"><b>本板注意点：</b>工程记忆里提到，本板下单时选了“阻抗管控：无要求”——但板上明明有 USB 高速差分对（90Ω）。<b>建议：</b>若重新打板，应在嘉立创下单时勾选“阻抗管控”并备注 USB 差分对 90Ω，或按厂家的 90Ω 叠层参数（线宽/线距/介质厚）来走线，否则高速通信可能不稳定。</div>
+
+  <h3 id="ad-diff">6.2 差分对走线</h3>
+  <p>USB 的 DP/DM 是一对“差分线”：信号靠两根线的<b>电压差</b>表示。走线规则：</p>
+  <ul>
+    <li><b>等长</b>：两根线长度尽量一致（长度差通常要求 &lt; 5–15mil），否则差分信号“歪了”。</li>
+    <li><b>等距/紧耦合</b>：两根线平行、间距固定，保持 90Ω 差分阻抗。</li>
+    <li><b>少换层、远离干扰</b>：尽量不穿过隔离带，远离电源和时钟。</li>
+  </ul>
+  <div class="svgbox">
+    <svg viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg">
+      <path d="M40 60 H360" stroke="#1565c0" stroke-width="4" fill="none"/>
+      <path d="M40 90 H360" stroke="#1565c0" stroke-width="4" fill="none"/>
+      <text x="200" y="52" text-anchor="middle" fill="#0d3a73" font-size="12">DP</text>
+      <text x="200" y="112" text-anchor="middle" fill="#0d3a73" font-size="12">DM</text>
+      <text x="400" y="80" text-anchor="middle" fill="#5b6b7b" font-size="11">间距s固定</text>
+      <line x1="200" y1="64" x2="200" y2="86" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <rect x="360" y="50" width="80" height="50" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="400" y="78" text-anchor="middle" fill="#e65100" font-size="11">90Ω</text>
+    </svg>
+    <div class="cap">图 6-2：USB 差分对——两根线等长、等距，整体呈现 90Ω 差分阻抗</div>
+  </div>
+
+  <h3 id="ad-drc">6.3 DRC 与可制造性（DFM）</h3>
+  <p><b>DRC（Design Rule Check，设计规则检查）</b>：EDA 软件按你设定的规则（最小线宽、最小间距、过孔大小、短路/开路）自动扫描 PCB，报错让你改。打板前必跑。</p>
+  <p><b>嘉立创（JLCPCB）常见工艺下限（参考，以官网为准）：</b></p>
+  <table>
+    <tr><th>参数</th><th>常用下限</th><th>说明</th></tr>
+    <tr><td>最小线宽 / 线距</td><td>3.5 / 3.5 mil（约 0.09mm）</td><td>再细工厂良率下降、加钱</td></tr>
+    <tr><td>过孔</td><td>外径 0.45mm / 内径 0.2mm 起</td><td>本板用了过孔塞孔（plug）</td></tr>
+    <tr><td>板厚</td><td>本板 1.6mm</td><td>4 层常用 1.6 / 1.2mm</td></tr>
+    <tr><td>表面工艺</td><td>有铅喷锡（本板）</td><td>也可选沉金（ENIG）更平整</td></tr>
+    <tr><td>阻抗</td><td>可勾选“阻抗管控”</td><td>本板建议补 90Ω 备注</td></tr>
+  </table>
+
+  <h3 id="ad-order">6.4 嘉立创下单流程（简述）</h3>
+  <ol>
+    <li>EDA 里完成 PCB，跑 DRC 无错，画出板框（Board Outline）。</li>
+    <li>导出 Gerber / 或直接在嘉立创 EDA 一键下单。</li>
+    <li>选参数：层数 4、板厚 1.6mm、颜色、表面工艺、是否需要阻抗、过孔塞孔等。</li>
+    <li>上传 BOM（见模块 9）和坐标文件（或直接在 EDA 里“BOM 配单”）让工厂贴片，或自己买料手焊。</li>
+    <li>确认预览（特别是隔离带、阻抗说明），下单。</li>
+  </ol>
+</section>
+
+<section id="flow">
+  <h2>7. 整机信号流向（串起来看）</h2>
+  <div class="svgbox">
+    <svg viewBox="0 0 680 130" xmlns="http://www.w3.org/2000/svg" font-size="12">
+      <rect x="10" y="45" width="90" height="44" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+      <text x="55" y="72" text-anchor="middle" fill="#0d3a73">电脑</text>
+      <rect x="120" y="45" width="90" height="44" rx="6" fill="#fff8e1" stroke="#e65100" stroke-width="2"/>
+      <text x="165" y="64" text-anchor="middle" fill="#e65100">USB-C</text><text x="165" y="80" text-anchor="middle" fill="#5b6b7b">取电+数据</text>
+      <rect x="230" y="45" width="100" height="44" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+      <text x="280" y="64" text-anchor="middle" fill="#e65100">HPM5321</text><text x="280" y="80" text-anchor="middle" fill="#5b6b7b">协议转换</text>
+      <rect x="350" y="45" width="90" height="44" rx="6" fill="#fce4ec" stroke="#c0392b" stroke-width="2"/>
+      <text x="395" y="64" text-anchor="middle" fill="#c0392b">隔离</text><text x="395" y="80" text-anchor="middle" fill="#5b6b7b">U2+U5</text>
+      <rect x="460" y="45" width="90" height="44" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+      <text x="505" y="64" text-anchor="middle" fill="#6a1b9a">收发器</text><text x="505" y="80" text-anchor="middle" fill="#5b6b7b">SIT1042</text>
+      <rect x="570" y="45" width="100" height="44" rx="6" fill="#e0f7fa" stroke="#00838f" stroke-width="2"/>
+      <text x="620" y="64" text-anchor="middle" fill="#00838f">CAN 总线</text><text x="620" y="80" text-anchor="middle" fill="#5b6b7b">汽车/设备</text>
+      <line x1="100" y1="67" x2="120" y2="67" stroke="#37474f" stroke-width="2"/>
+      <line x1="210" y1="67" x2="230" y2="67" stroke="#37474f" stroke-width="2"/>
+      <line x1="330" y1="67" x2="350" y2="67" stroke="#37474f" stroke-width="2"/>
+      <line x1="440" y1="67" x2="460" y2="67" stroke="#37474f" stroke-width="2"/>
+      <line x1="550" y1="67" x2="570" y2="67" stroke="#37474f" stroke-width="2"/>
+    </svg>
+    <div class="cap">图 7-1：端到端信号流——数据从左流到右，隔离屏障把“电”切断</div>
+  </div>
+  <p>一句话总结：<b>电脑 USB → USB-C 取电/通信 → HPM5321 做协议翻译 → 经隔离电源+隔离器跨过 1500V 屏障 → CAN 收发器变成总线差分信号 → 接线端子接到外部 CAN 网络。</b></p>
+</section>
+
+<section id="solder">
+  <h2>8. 动手：焊接与调试（小白实操）</h2>
+  <p>板子是贴片（SMD）设计，元件小、引脚密，对刚入门的朋友确实有点挑战。但拆开看，它遵循一条铁律：<b>先焊“地基”，确认没问题了，再焊“大脑”，最后才通电烧录。</b> 这样万一焊错，损失最小、最好查。</p>
+  <div class="note">核心原则：<b>被动元件 + 连接器 → 电源系统（先不上主控）→ 主控 QFN → 隔离/收发 → 上电 → 烧录</b>。每焊完一段，就用万用表验一段，确认不短路、电压对，再往下走。</div>
+
+  <figure>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 980" font-family="PingFang SC, Microsoft YaHei, Segoe UI, Arial, sans-serif" role="img" width="100%">
+      <title>8 阶段焊接 + 调试 + 烧录顺序图</title>
+      <desc>流程编号 1-8，对应 PCB 实物位置与万用表测试</desc>
+      <text x="20" y="24" font-size="14" font-weight="500" fill="#1b1b1b">本板焊接 + 调试 + 烧录全流程</text>
+      <text x="20" y="44" font-size="11" fill="#5f5e5a">核心原则：被动+连接器 → 电源 → 再主控 → 隔离+收发 → 通电烧录</text>
+
+      <g>
+        <rect x="20" y="62" width="640" height="92" rx="8" fill="#EAF3DE" stroke="#639922" stroke-width="1"/>
+        <circle cx="50" cy="86" r="14" fill="#639922"/>
+        <text x="50" y="91" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">1</text>
+        <text x="75" y="86" font-size="13" font-weight="500" fill="#27500A">阶段 1｜全板被动元件（电阻 + 小电容）</text>
+        <text x="75" y="105" font-size="11" fill="#3B6D11">焊：C3-C27（100nF/10uF/1uF/4.7uF/22uF 全套）+ R1-R11</text>
+        <text x="75" y="122" font-size="11" fill="#27500A">位置：3D 视图底边一整排密集小方块（C0603 黑色贴片）</text>
+        <text x="75" y="139" font-size="11" fill="#27500A">万用表：蜂鸣档点 3.3V 对 GND → 应响（去耦通路正常）</text>
+      </g>
+
+      <g>
+        <rect x="20" y="164" width="640" height="92" rx="8" fill="#E6F1FB" stroke="#378ADD" stroke-width="1"/>
+        <circle cx="50" cy="188" r="14" fill="#378ADD"/>
+        <text x="50" y="193" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">2</text>
+        <text x="75" y="188" font-size="13" font-weight="500" fill="#0C447C">阶段 2｜机械件 + ESD 接口防护</text>
+        <text x="75" y="207" font-size="11" fill="#185FA5">焊：USB1 Type-C 座（左下大金属件）+ D6 USBLC6-2SC6（USB ESD）</text>
+        <text x="75" y="224" font-size="11" fill="#0C447C">+ H1 烧录排针（顶部 1×8：DBG_TX/RX + JTAG + BOOT）</text>
+        <text x="75" y="241" font-size="11" fill="#0C447C">+ CN1/CN2 绿色端子 + D4/D5 PESD1CAN（CAN 总线 ESD）</text>
+      </g>
+
+      <g>
+        <rect x="20" y="266" width="640" height="78" rx="8" fill="#FAEEDA" stroke="#BA7517" stroke-width="1"/>
+        <circle cx="50" cy="290" r="14" fill="#BA7517"/>
+        <text x="50" y="295" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">3</text>
+        <text x="75" y="290" font-size="13" font-weight="500" fill="#633806">阶段 3｜人机件（LED + 拨码开关）</text>
+        <text x="75" y="309" font-size="11" fill="#854F0B">焊：D1/D2 状态 LED + SW1 BOOT 拨码 + SW2 终端电阻切换</text>
+        <text x="75" y="326" font-size="11" fill="#633806">万用表：LED 不响（断开），开关任一档位都应能测到连通</text>
+      </g>
+
+      <g>
+        <rect x="20" y="354" width="640" height="112" rx="8" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1"/>
+        <circle cx="50" cy="378" r="14" fill="#E24B4A"/>
+        <text x="50" y="383" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">4</text>
+        <text x="75" y="378" font-size="13" font-weight="500" fill="#791F1F">阶段 4｜★ 电源系统（关键，先不上主控）</text>
+        <text x="75" y="397" font-size="11" fill="#A32D2D">焊：LDO1 ME6211C33（SOT-23-5 主电源）+ L1 4.7uH 电感</text>
+        <text x="75" y="414" font-size="11" fill="#791F1F">+ U2 B0505S-1WR3 隔离 DC-DC（3D 视图中间大黑色模块）</text>
+        <text x="75" y="431" font-size="11" fill="#791F1F">★ 上电测试：USB 接电脑，或 5V 稳压源（限流 100mA）</text>
+        <text x="75" y="448" font-size="11" font-weight="500" fill="#791F1F">万用表：3.3V → 3.30±0.05V；隔离 5V → 4.95-5.10V</text>
+      </g>
+
+      <g>
+        <rect x="20" y="476" width="640" height="92" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+        <circle cx="50" cy="500" r="14" fill="#D85A30"/>
+        <text x="50" y="505" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">5</text>
+        <text x="75" y="500" font-size="13" font-weight="500" fill="#712B13">阶段 5｜隔离 + CAN 收发</text>
+        <text x="75" y="519" font-size="11" fill="#993C1D">焊：U5 CA-IS3742HW（SOIC-16 数字隔离器）+ U3/U4 SIT1042（SOP-8 CAN 收发器 ×2）</text>
+        <text x="75" y="536" font-size="11" fill="#712B13">万用表：U3/U4 的 CANH、CANL 对 GND 不响（不能短路）</text>
+        <text x="75" y="553" font-size="11" fill="#712B13">直流电压档：U5 主侧 VCC（3.3V）与隔离侧 VCC（5V）应无直通</text>
+      </g>
+
+      <g>
+        <rect x="20" y="578" width="640" height="78" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="1"/>
+        <circle cx="50" cy="602" r="14" fill="#534AB7"/>
+        <text x="50" y="607" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">6</text>
+        <text x="75" y="602" font-size="13" font-weight="500" fill="#26215C">阶段 6｜主控的心跳——晶振 + 负载电容</text>
+        <text x="75" y="621" font-size="11" fill="#3C3489">焊：X1 24MHz 晶振 + C1/C2 22pF 负载电容</text>
+        <text x="75" y="638" font-size="11" fill="#26215C">万用表：晶振两脚对 GND 不响（电容负载正常截止）</text>
+      </g>
+
+      <g>
+        <rect x="20" y="666" width="640" height="112" rx="8" fill="#F1EFE8" stroke="#444441" stroke-width="1"/>
+        <circle cx="50" cy="690" r="14" fill="#444441"/>
+        <text x="50" y="695" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">7</text>
+        <text x="75" y="690" font-size="13" font-weight="500" fill="#1b1b1b">阶段 7｜★ QFN-48 主控 HPM5321（最难的一颗）</text>
+        <text x="75" y="709" font-size="11" fill="#444441">位置：3D 视图中央深灰色小方块，四边无引脚、底部散热焊盘</text>
+        <text x="75" y="726" font-size="11" fill="#2c2c2a">方法：① 助焊膏 + 热风枪 320°C 回流 ② 烙铁拖焊</text>
+        <text x="75" y="743" font-size="11" font-weight="500" fill="#2c2c2a">★ 焊完放大镜逐脚查：相邻脚不桥 + 不虚焊 + 底部散热焊盘已接地</text>
+        <text x="75" y="760" font-size="11" fill="#2c2c2a">万用表：所有相邻脚不响 + 3.3V 脚与 GND 响（去耦正常）</text>
+      </g>
+
+      <g>
+        <rect x="20" y="788" width="640" height="112" rx="8" fill="#EAF3DE" stroke="#27500A" stroke-width="2"/>
+        <circle cx="50" cy="812" r="14" fill="#27500A"/>
+        <text x="50" y="817" font-size="13" font-weight="500" fill="#FFFFFF" text-anchor="middle">8</text>
+        <text x="75" y="812" font-size="13" font-weight="500" fill="#173404">阶段 8｜通电验证 + 烧录 + 联调</text>
+        <text x="75" y="831" font-size="11" fill="#27500A">上电：USB 供电，限流 100mA；电流正常 30-80mA</text>
+        <text x="75" y="848" font-size="11" fill="#27500A">USB 转串口模块接 H1（TX↔RX 交叉、共地、3.3V 电平）</text>
+        <text x="75" y="865" font-size="11" fill="#27500A">按住 SW1 BOOT 档 → 上电 → 进入 ISP 模式</text>
+        <text x="75" y="882" font-size="11" font-weight="500" fill="#173404">HPMicro_Manufacturing_Tool 烧 .bin → 复位 → LED 闪 + USB 枚举成功</text>
+      </g>
+
+      <rect x="20" y="912" width="640" height="28" rx="6" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1"/>
+      <text x="35" y="930" font-size="11" font-weight="500" fill="#791F1F">⚠ 任何阶段发现电源短路 / 电流异常，立即断电！先排错再继续</text>
+      <text x="20" y="960" font-size="10" fill="#888780">图例：绿=被动 / 蓝=连接器 / 黄=LED+开关 / 红=电源关键 / 橙=隔离与收发 / 紫=晶振 / 黑=QFN 主控 / 深绿=联调</text>
+    </svg>
+    <figcaption>图 8-1　8 阶段焊接 + 调试 + 烧录流程（绿色块=本阶段焊什么，红/黑/橙=难点与关键点）</figcaption>
+  </figure>
+
+  <h3 id="sol-ready">8.0 焊前准备（先做这些再下烙铁）</h3>
+  <p><b>工具清单（三类分开）：</b></p>
+  <ul>
+    <li><b>焊接</b>：恒温电烙铁（60W+、尖头/刀头）、0.5–0.8mm 含松香芯焊锡丝、助焊膏、热风拆焊台（QFN 强烈推荐）、尖头防静电镊子、放大镜/显微镜、吸锡带、酒精棉签（洗板）、静电手环。</li>
+    <li><b>调试</b>：万用表（蜂鸣/二极管/电压/电阻档齐全）、带<b>限流</b>的直流稳压电源（第一次上电必用，设 100mA 限流防短路烧板）。</li>
+    <li><b>烧录</b>：USB 转串口模块（CH340/CP2102，<b>3.3V 电平</b>）、HPMicro_Manufacturing_Tool。详见第 9 节。</li>
+  </ul>
+
+  <h3 id="sol-1">8.1 阶段 1｜被动元件（电阻 + 小电容）</h3>
+  <p>焊板子两面“密集小方块”那一大片：所有 C3-C27（100nF / 10uF / 1uF / 4.7uF / 22uF）、所有 R1-R11 电阻。<b>技巧</b>：先焊最矮的 0402/0603，再焊大电容；尖头烙铁 + 放大镜，一个一个对位。</p>
+  <table>
+    <tr><th>万用表</th><th>档位</th><th>红表笔</th><th>黑表笔</th><th>期望</th></tr>
+    <tr><td>查通路</td><td>蜂鸣档</td><td>3.3V 测试点</td><td>GND</td><td><b>响</b>（去耦电容本就是 VCC→GND 低阻）</td></tr>
+    <tr><td>查通路</td><td>蜂鸣档</td><td>5V 测试点</td><td>GND</td><td><b>响</b></td></tr>
+    <tr><td>查未上电</td><td>蜂鸣档</td><td>VBUS 焊盘</td><td>GND</td><td>不响（USB 还没插）</td></tr>
+  </table>
+
+  <h3 id="sol-2">8.2 阶段 2｜机械件 + ESD 接口防护</h3>
+  <p>焊：<b>USB1 Type-C 座</b>（左下大金属件，先对正固定脚再焊）、<b>D6 USBLC6-2SC6</b>（USB ESD，贴 USB 座）、<b>H1 烧录排针</b>（顶部 1×8，印着 DBG_TDO/TDI/TCK/TMS/RX/TX/GND/BOOT）、<b>CN1/CN2</b> 绿色 3P 端子、<b>D4/D5 PESD1CAN</b>（CAN 总线 ESD）。</p>
+  <table>
+    <tr><th>万用表</th><th>档位</th><th>测点</th><th>期望</th><th>异常</th></tr>
+    <tr><td>查方向</td><td>二极管档</td><td>D6 任一脚→GND</td><td>0.6–0.7V（正向）</td><td>0V=短路；反接也 0V=击穿</td></tr>
+    <tr><td>查方向</td><td>二极管档</td><td>D4/D5 脚→GND</td><td>0.6–0.7V</td><td>同上</td></tr>
+    <tr><td>查连通</td><td>蜂鸣档</td><td>H1 的 GND 脚→板大铜皮</td><td>响</td><td>不响=排针虚焊</td></tr>
+  </table>
+
+  <h3 id="sol-3">8.3 阶段 3｜人机件（LED + 拨码开关）</h3>
+  <p>焊：<b>D1/D2</b> 状态 LED（<b>注意正负极</b>——长脚为正、带绿点/“T”标记为负的那侧接地）、<b>SW1</b> 4 位 BOOT 拨码、<b>SW2</b> 顶部蓝色滑钮（120Ω 终端电阻切换）。</p>
+  <table>
+    <tr><th>万用表</th><th>档位</th><th>测点</th><th>期望</th><th>异常</th></tr>
+    <tr><td>查极性</td><td>二极管档</td><td>红→正(长脚) / 黑→负</td><td>1.6–2.2V（红 LED）</td><td>0V=焊反或短路</td></tr>
+    <tr><td>查开关</td><td>蜂鸣档</td><td>SW1 任一档相邻脚</td><td>响（0Ω）</td><td>不响=开关坏</td></tr>
+    <tr><td>查开关</td><td>蜂鸣档</td><td>SW2 “ON”档两端</td><td>响</td><td>不响</td></tr>
+  </table>
+
+  <h3 id="sol-4">8.4 阶段 4｜★ 电源系统（最关键，<b>主控先别焊</b>）</h3>
+  <p>焊：<b>LDO1 ME6211C33</b>（SOT-23-5，5V→3.3V，注意 1 脚圆点方向）、<b>L1 4.7μH</b> 电感、<b>U2 B0505S-1WR3</b>（隔离 DC-DC，3D 图里那个黑色方块）。</p>
+  <div class="warn"><b>★ 上电测试（不焊主控就能测，这是分阶段最大的好处）：</b>USB 接到电脑（或 5V 稳压源，<b>先限流 100mA</b>）。板子基本灯应立刻亮。然后：</div>
+  <table>
+    <tr><th>测点</th><th>红表笔</th><th>黑表笔</th><th>期望</th><th>异常怎么办</th></tr>
+    <tr><td>数字侧 3.3V</td><td>LDO1 输出脚 / 主控 VCC 焊盘</td><td>板大 GND</td><td><b>3.30V ±0.05V</b></td><td>0V=LDO 没启振/短路；>3.5V=LDO 坏</td></tr>
+    <tr><td>隔离侧 5V</td><td>U2 输出脚</td><td>隔离侧 GND</td><td><b>4.95–5.10V</b></td><td>0V=模块未上电/输入反接；>5.5V=模块坏</td></tr>
+    <tr><td>USB VBUS</td><td>USB 座 VBUS 脚</td><td>GND</td><td><b>5.00V</b></td><td>0V=连接器未焊好/线没插</td></tr>
+  </table>
+  <p class="note">测得电源都对了，才进入下一步。这一步能帮你避免“一通电把几百块的 QFN 主控直接烧了”。</p>
+
+  <h3 id="sol-5">8.5 阶段 5｜隔离器 + CAN 收发器</h3>
+  <p>焊：<b>U5 CA-IS3742HW</b>（SOIC-16 数字隔离芯片，注意 1 脚方向）、<b>U3/U4 SIT1042</b>（SOP-8，CAN-FD 收发器 ×2，分别接 CAN1/CAN2）、<b>R8/R9 = 120Ω</b> 终端电阻（通常已焊好）。</p>
+  <table>
+    <tr><th>万用表</th><th>档位</th><th>测点</th><th>期望</th><th>异常</th></tr>
+    <tr><td>查短路</td><td>蜂鸣档</td><td>U3/U4 的 CANH→GND</td><td><b>不响</b></td><td>响=短路/焊桥</td></tr>
+    <tr><td>查短路</td><td>蜂鸣档</td><td>U3/U4 的 CANL→GND</td><td><b>不响</b></td><td>响=短路</td></tr>
+    <tr><td>查隔离</td><td>蜂鸣档</td><td>U5 主侧 VCC↔隔离侧 VCC</td><td><b>不响</b></td><td>响=隔离坏了（不该连通）</td></tr>
+  </table>
+
+  <h3 id="sol-6">8.6 阶段 6｜晶振 + 负载电容</h3>
+  <p>焊：<b>X1 24MHz</b> 晶振（SMD 4 脚金属壳）、<b>C1/C2 = 22pF</b> 负载电容（晶振两脚各一颗，另一端接地）。</p>
+  <table>
+    <tr><th>万用表</th><th>档位</th><th>测点</th><th>期望</th></tr>
+    <tr><td>查短路</td><td>蜂鸣档</td><td>X1 脚 1→GND</td><td>不响</td></tr>
+    <tr><td>查短路</td><td>蜂鸣档</td><td>X1 脚 3→GND</td><td>不响</td></tr>
+  </table>
+
+  <h3 id="sol-7">8.7 阶段 7｜★ QFN-48 主控（全板最难点）</h3>
+  <p>焊：<b>U1 HPM5321</b>（3D 图中央深灰色、<b>没有外露引脚</b>的小方块，<b>底部有散热焊盘</b>）。引脚在芯片底面，肉眼看不到，最易虚焊/桥接。两种焊法二选一：</p>
+  <ul>
+    <li><b>A. 热风枪回流（推荐新手）</b>：① 焊盘薄涂一层助焊膏；② 芯片按 <b>1 脚圆点</b>对位；③ 热风枪 320–340°C、小风量，芯片上方 3–5cm 匀速画圈加热；④ 锡熔后表面张力会把芯片“吸”回正位；⑤ 自然冷却，勿动。</li>
+    <li><b>B. 烙铁拖焊</b>：① 先对角点焊固定；② 涂大量助焊剂；③ 烙铁挂锡，从一端缓慢拖过所有引脚；④ 多余锡用吸锡带清掉。</li>
+  </ul>
+  <div class="warn"><b>★ 焊完必做：</b>① 显微镜/放大镜查四边<b>无桥接</b>（相邻脚不可粘连）；② 底部散热焊盘<b>必须接地</b>（烙铁尖从侧面伸进缝隙补锡）；③ 蜂鸣档测<b>所有相邻脚不响</b>，且 3.3V 脚与 GND 响（去耦正常）。</div>
+
+  <h3 id="sol-8">8.8 阶段 8｜通电验证 + 烧录联调</h3>
+  <ol>
+    <li><b>再次全板测电源</b>：限流 100mA 上电，电流应 <b>30–80mA</b>。<b>任何 &gt;100mA 立即断电</b>查短路。</li>
+    <li><b>USB 转串口模块接线</b>（见第 9 节）：模块 <b>TX→H1 的 DBG_RX</b>、<b>RX→DBG_TX</b>、<b>GND→GND</b>，<b>模块拨 3.3V</b>（5V 会烧主控）。</li>
+    <li><b>进入 ISP 模式</b>：按住 SW1 拨到 BOOT=1（或按住 BOOT 按钮），不松手→USB 上电→HPMicro_Manufacturing_Tool 识别到设备→松手。</li>
+    <li><b>烧录</b>：选固件 <code>FDFW_xxxxxx.bin</code> → 烧写 → 复位。</li>
+    <li><b>验收</b>：LED D1/D2 按节拍闪；电脑设备管理器多出 USB 设备；CAN 上位机能收发帧。</li>
+  </ol>
+
+  <h3 id="sol-tip">8.9 万用表测试口诀（速查表）</h3>
+  <table>
+    <tr><th>目的</th><th>档位</th><th>红表笔</th><th>黑表笔</th><th>期望</th></tr>
+    <tr><td>找<b>短路</b></td><td>蜂鸣档</td><td>VCC 类测试点</td><td>GND</td><td><b>不响</b>才正常（响=短路）</td></tr>
+    <tr><td>查<b>方向/未焊</b></td><td>二极管档</td><td>VCC</td><td>GND</td><td>有压降（LED/ESD 0.6V），反向 OL</td></tr>
+    <tr><td>量<b>电压</b></td><td>直流电压</td><td>测试点</td><td>GND</td><td>数字侧≈3.3V / 隔离侧≈5V / VBUS=5V</td></tr>
+    <tr><td>量<b>电阻</b></td><td>电阻档</td><td>一端</td><td>另一端</td><td>看具体阻值（如 120Ω 终端）</td></tr>
+  </table>
+  <div class="warn"><b>⚠ 安全铁律：</b>任何阶段闻到焦味 / 看到冒烟 / 电流异常 → <b>立刻拔电</b>。先排错再继续，否则好板子可能烧成“板砖”。</div>
+
+  <h3 id="sol-check">8.10 焊接进度核查清单（可打印打勾）</h3>
+  <p class="tip">把本页打印出来，每完成一项在前面的方框里打勾。<b>每一阶段的万用表测试“通过”后，才进入下一阶段。</b>板号 <code>1311009A-V3-260807</code>。</p>
+  <div class="checklist">
+    <p class="stage">■ Stage 0 ｜焊前（裸板，一颗料都没焊之前）</p>
+    <label><input type="checkbox"> 对照板号与 EasyEDA 工程一致，不是别人的板子</label>
+    <label><input type="checkbox"> 放大镜下目视：无开路 / 短路 / 缺焊盘 / 丝印错位</label>
+    <label><input type="checkbox"> 万用表蜂鸣档：USB_VBUS / 3.3V / 5V 测试点 → GND <b>均不响</b>（响=出厂短路，立刻联系嘉立创补发）</label>
+    <label><input type="checkbox"> 烙铁/热风枪通电试温；万用表电量足；限流电源设 100mA</label>
+
+    <p class="stage">■ Stage 1 ｜被动元件（电阻 + 小电容）</p>
+    <label><input type="checkbox"> R1–R7 = 10kΩ / 0603；R8/R9 = 120Ω / 0805；R10/R11 = 5.1kΩ / 0402（先焊大封装练手，0402 最后焊）</label>
+    <label><input type="checkbox"> 全部去耦/滤波电容 C3–C27（<b>不含</b> C1/C2 22pF，留给 Stage 6）</label>
+    <label><input type="checkbox"> 蜂鸣档：3.3V 测试点 → GND <b>响</b>；5V 测试点 → GND <b>响</b>（去耦通路正常）</label>
+
+    <p class="stage">■ Stage 2 ｜连接器 + ESD 接口防护</p>
+    <label><input type="checkbox"> USB1 Type-C 座（先焊固定脚再焊信号脚，放大镜查无桥接）</label>
+    <label><input type="checkbox"> H1 1×8 排针；CN1/CN2 绿色端子；D6 USBLC6-2SC6；D4/D5 PESD1CAN</label>
+    <label><input type="checkbox"> 二极管档测 D6/D4/D5 对 GND ≈ 0.6–0.7V；H1 的 GND 脚 → 板子大铜皮 GND <b>响</b></label>
+
+    <p class="stage">■ Stage 3 ｜人机件（LED + 开关）</p>
+    <label><input type="checkbox"> D1/D2 LED（长脚=正极，别焊反）；SW1 拨码；SW2 滑钮</label>
+    <label><input type="checkbox"> 二极管档测 LED 正向 1.6–2.2V（反向无读数）</label>
+
+    <p class="stage">■ Stage 4 ｜★ 电源系统（<b>主控先别焊</b>）</p>
+    <label><input type="checkbox"> LDO1 ME6211C33；L1 4.7μH；U2 B0505S-1WR3</label>
+    <label><input type="checkbox"> 限流 100mA 上电：3.3V = 3.30±0.05V；隔离 5V = 4.95–5.10V；VBUS = 5.0V</label>
+
+    <p class="stage">■ Stage 5 ｜隔离器 + CAN 收发</p>
+    <label><input type="checkbox"> U5 CA-IS3742HW；U3/U4 SIT1042 ×2（注意 1 脚方向）</label>
+    <label><input type="checkbox"> 蜂鸣档：CANH/CANL → GND <b>不响</b>；U5 主侧 VCC ↔ 隔离侧 VCC <b>不响</b></label>
+
+    <p class="stage">■ Stage 6 ｜晶振 + 负载电容</p>
+    <label><input type="checkbox"> X1 24MHz；C1/C2 = 22pF</label>
+    <label><input type="checkbox"> 蜂鸣档：晶振两脚 → GND <b>不响</b></label>
+
+    <p class="stage">■ Stage 7 ｜★ QFN-48 主控（最难）</p>
+    <label><input type="checkbox"> U1 HPM5321：助焊膏 + 热风枪 320–340°C 回流；放大镜检查四边无桥接</label>
+    <label><input type="checkbox"> 底部散热焊盘已接地（热风从侧面补锡）；蜂鸣档相邻脚 <b>不响</b>，3.3V 脚 ↔ GND <b>响</b></label>
+
+    <p class="stage">■ Stage 8 ｜通电验证 + 烧录</p>
+    <label><input type="checkbox"> 限流 100mA 上电，电流 30–80mA（超 100mA 立即断电）</label>
+    <label><input type="checkbox"> USB 转串口接 H1（TX↔RX 交叉、共地、模块拨 3.3V）；按住 BOOT 进 ISP；HPMicro 工具烧 .bin</label>
+    <label><input type="checkbox"> 验收：LED 闪 + USB 枚举成功 + CAN 收发正常</label>
+  </div>
+</section>
+
+<section id="hands">
+  <h2>9. 动手：烧录固件与装驱动</h2>
+  <p>板子硬件做好后，还要“写软件”进去才能用。原作者给出的方法：</p>
+  <h4>9.1 烧录（注意！）</h4>
+  <div class="warn"><b>重要限制：</b>HPM5321 的 QFP48 版本<b>不支持 USB 直接烧录</b>，必须通过<b>串口</b>烧录！需要工具：HPMicro_Manufacturing_Tool（官网或附件可下）。</div>
+  <ol>
+    <li>用“串口转 USB 工具”接板上的调试排针 <span class="chip">H1</span>。</li>
+    <li><b>按住 BOOT 按钮</b>，插入 USB 上电，烧录软件里应能扫描到设备。</li>
+    <li>载入固件 <code>FDFW_xxxxxx.bin</code>，点击烧写，完成后重新上电。</li>
+  </ol>
+  <h4>9.2 装驱动</h4>
+  <p>烧录后电脑需安装 PCAN 驱动（PEAK 官网下载，安装包自带 PCAN-View）。打开选通道和波特率即可收发 CAN 报文。Linux 下可装驱动走 SocketCAN。</p>
+  <h4>9.3 外壳</h4>
+  <p>原项目提供 3D 打印外壳（.3mf / .STEP 附件），埋入 M3 铜螺母 + M3×5 螺丝组装。面板文件可直接在嘉立创面板下单。</p>
+
+  <h4>9.4 你自己也能在 EasyEDA 里看这块板</h4>
+  <p>你现在已经通过桥接连着工程，可以直接在编辑器里点开：</p>
+  <ul>
+    <li>原理图 4 页：CORE / USB / CAN-POWER / CHANGELOG，对照本文学每个元件。</li>
+    <li>PCB1：打开看 4 层、隔离带、USB 差分对的实际走线。</li>
+    <li>点任意元件看属性，里面有“位号 / 封装 / 型号 / 阻值 / 描述”，和本文档的 BOM 一致。</li>
+  </ul>
+</section>
+
+<section id="bom">
+  <h2>10. 完整 BOM 表（本工程实测）</h2>
+  <p>下表直接来自你当前打开的工程（通过 API 读取的真实数据）。按功能区块排列，并标注每个元件的作用。<span class="chip">数量</span> 指该位号在板上的颗数（多数 1 颗，退耦电容成组）。</p>
+
+  <h4>CORE 页（主控核心）</h4>
+  <table>
+    <tr><th>位号</th><th>型号/值</th><th>封装</th><th>作用</th></tr>
+    <tr><td>U1</td><td>HPM5321</td><td>QFN-48</td><td>主控 MCU（RISC-V，USB 高速 + 2×CAN-FD）</td></tr>
+    <tr><td>X1</td><td>24MHz（12pF）</td><td>CRYSTAL-SMD_4P</td><td>系统主时钟</td></tr>
+    <tr><td>C1, C2</td><td>22pF</td><td>C0603</td><td>晶振负载电容</td></tr>
+    <tr><td>L1</td><td>4.7uH</td><td>IND-SMD_L2.5-W2.0</td><td>MCU 内部 DCDC 功率电感</td></tr>
+    <tr><td>C20, C21</td><td>22uF / 6.3V</td><td>C0603</td><td>内核电源滤波</td></tr>
+    <tr><td>C6</td><td>10uF</td><td>C0603</td><td>电源滤波</td></tr>
+    <tr><td>C16, C18</td><td>4.7uF / 16V</td><td>C0603</td><td>电源滤波</td></tr>
+    <tr><td>C10</td><td>100nF</td><td>C0603</td><td>退耦</td></tr>
+    <tr><td>C3–C5, C7–C9, C11–C15, C17, C19</td><td>100nF ×14</td><td>C0603</td><td>各电源引脚退耦电容</td></tr>
+    <tr><td>R1–R4</td><td>5.1kΩ</td><td>R0603</td><td>MCU 配置/上下拉电阻</td></tr>
+    <tr><td>R5–R7</td><td>10kΩ</td><td>R0603</td><td>上拉电阻</td></tr>
+    <tr><td>SW1</td><td>4 位拨码</td><td>SW-SMD_4P</td><td>功能/地址配置</td></tr>
+    <tr><td>H1</td><td>1×8 排针</td><td>HDR-TH_8P-P2.54</td><td>调试/烧录串口</td></tr>
+    <tr><td>D1, D2</td><td>黄绿 LED</td><td>LED-TH</td><td>状态指示</td></tr>
+  </table>
+
+  <h4>USB 页（接口与保护）</h4>
+  <table>
+    <tr><th>位号</th><th>型号/值</th><th>封装</th><th>作用</th></tr>
+    <tr><td>USB1</td><td>Type-C 母座（16P）</td><td>USB-C-SMD_TYPEC-304</td><td>USB 接口（取电+通信）</td></tr>
+    <tr><td>R10, R11</td><td>5.1kΩ</td><td>R0402</td><td>CC1/CC2 下拉（Rd），协商供电</td></tr>
+    <tr><td>D6</td><td>ESD 5V</td><td>SOT-23-6</td><td>USB 静电保护</td></tr>
+  </table>
+
+  <h4>CAN/POWER 页（电源 + CAN + 隔离）</h4>
+  <table>
+    <tr><th>位号</th><th>型号/值</th><th>封装</th><th>作用</th></tr>
+    <tr><td>LDO1</td><td>ME6211（5V→3.3V, 500mA）</td><td>SOT-23-5</td><td>系统 3.3V 稳压</td></tr>
+    <tr><td>U2</td><td>B0505S-1WR3（隔离 DC-DC）</td><td>PWRM-TH</td><td>隔离 5V 供电（1500V）</td></tr>
+    <tr><td>U5</td><td>CA-IS3742HW（4 通道数字隔离器）</td><td>SOIC-16</td><td>跨隔离屏障传 TX/RX 信号</td></tr>
+    <tr><td>U3, U4</td><td>SIT1042（CAN-FD 收发器）</td><td>SOP-8</td><td>CAN 电平翻译 ×2 通道</td></tr>
+    <tr><td>CN1, CN2</td><td>3.81mm 3P 端子</td><td>CONN-TH_3P-P3.81</td><td>CAN 接线端子 ×2</td></tr>
+    <tr><td>R8, R9</td><td>120Ω</td><td>R0805</td><td>CAN 终端电阻</td></tr>
+    <tr><td>SW2</td><td>2 位琴键开关</td><td>SW-TH_DP-02XP</td><td>切换 120Ω 终端是否接入</td></tr>
+    <tr><td>D3</td><td>TVS 5V</td><td>SOD-123</td><td>浪涌/过压保护</td></tr>
+    <tr><td>D4, D5</td><td>ESD</td><td>SOT-23-3</td><td>CAN 引脚静电保护</td></tr>
+    <tr><td>C22–C28</td><td>1uF ×4</td><td>C0603</td><td>电源滤波</td></tr>
+    <tr><td>C25, C26</td><td>10uF</td><td>C0603</td><td>电源滤波</td></tr>
+    <tr><td>C24, C29</td><td>100nF</td><td>C0603</td><td>退耦</td></tr>
+  </table>
+  <div class="note"><b>说明：</b>原 OSHWHub 开源页 BOM 标注电阻为 R0402（R1–R7），而你这份 <code>_copy</code> 工程实际用 <code>R0603</code>（R1–R7）、<code>R0805</code>（R8,R9）、<code>R0402</code>（R10,R11），本文以你打开的工程实测为准。电容总数约 30 颗（C1–C29 及若干），以退耦/滤波为主。</div>
+</section>
+
+<section id="gloss">
+  <h2>11. 术语表 & 延伸阅读</h2>
+  <h4>速查术语</h4>
+  <ul>
+    <li><b>PCB</b>：印刷电路板，板子的实物。</li>
+    <li><b>原理图（Schematic）</b>：表示“谁和谁电气连通”的逻辑图。</li>
+    <li><b>位号（Designator）</b>：元件编号，如 R1、U1。</li>
+    <li><b>封装（Footprint）</b>：元件在 PCB 上的焊盘形状。</li>
+    <li><b>网络（Net）</b>：原理图里被连在一起的所有点，物理上同一根线。</li>
+    <li><b>GND</b>：地，电压的 0 基准/回流路径。</li>
+    <li><b>LDO</b>：低压差线性稳压器，降压芯片。</li>
+    <li><b>DC-DC</b>：开关电源，高效率升降压。</li>
+    <li><b>隔离（Isolation）</b>：让信号过、电不过，防高压串入。</li>
+    <li><b>CAN / CAN FD</b>：汽车/工控通信总线；FD 是加速版（数据段可达 8Mbps）。</li>
+    <li><b>差分信号</b>：用两根线电压差表示 0/1，抗干扰强。</li>
+    <li><b>阻抗（Impedance）</b>：高频下“线看起来像多少欧姆”，USB 差分对要求 90Ω。</li>
+    <li><b>差分对</b>：一对等长等距走线（如 USB DP/DM）。</li>
+    <li><b>过孔（Via）</b>：打通各层、换层的金属小孔。</li>
+    <li><b>DRC</b>：设计规则检查，打板前必跑。</li>
+    <li><b>爬电/间隙</b>：隔离所需的最小表面距离/空间距离。</li>
+  </ul>
+  <h4>延伸阅读 / 资料来源</h4>
+  <ul>
+    <li>开源项目主页：<a class="ext" href="https://oshwhub.com/eda_kwazdnpkc/hpm5321_pcan">oshwhub.com/eda_kwazdnpkc/hpm5321_pcan</a></li>
+    <li>HPM5300 系列数据手册 / 用户手册（项目附件 PDF）</li>
+    <li>芯片资料：ME6211、B0505S-1WR3、CA-IS3742HW、SIT1042 数据手册（在元件属性的 Datasheet 链接里可点）</li>
+    <li>PCAN 驱动：PEAK 官网 Software 页</li>
+    <li>烧录工具：HPMicro_Manufacturing_Tool（GitHub releases）</li>
+    <li>参考上位机：PCAN-View、TSMaster、Linux SocketCAN</li>
+  </ul>
+  <div class="begin"><b>给小白的最后一句：</b>看不懂没关系，对照着编辑器里真实打开的板和这份文档，一个元件一个元件点开看属性，很快就通了。硬件不是背出来的，是“拆 + 看 + 焊”出来的。</div>
+</section>
+
+</main>
+</div>
+
+<footer>
+  本文档由 AI 根据开源项目 HPM5321 高速隔离 USB-CAN FD 工具 及 你当前打开的工程实况（元件/网络/封装）自动生成 · 供学习用途 ·
+  原项目 GPL-3.0，未经授权禁止商用
+</footer>
+</body>
+</html>

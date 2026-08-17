@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 380" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="surge" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+    <marker id="blk" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#16a34a"/>
+    </marker>
+  </defs>
+  <rect width="680" height="380" fill="#ffffff"/>
+  <text x="340" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#111827">隔离的目的：阻断共模地环路，保护 PC</text>
+
+  <!-- ============ LEFT: WITHOUT isolation ============ -->
+  <text x="180" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c">❌ 无隔离（普通 USB-CAN 线）</text>
+  <!-- PC box -->
+  <rect x="105" y="80" width="150" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="180" y="106" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">PC / 笔记本</text>
+  <text x="180" y="124" text-anchor="middle" font-size="10" fill="#1e40af">USB 口 · 主板芯片</text>
+  <!-- wire down -->
+  <line x1="180" y1="140" x2="180" y2="250" stroke="#475569" stroke-width="2"/>
+  <text x="196" y="200" font-size="9" fill="#64748b">直连 GND</text>
+  <!-- field box -->
+  <rect x="105" y="250" width="150" height="62" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="180" y="276" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">工业现场 CAN</text>
+  <text x="180" y="294" text-anchor="middle" font-size="10" fill="#9a3412">地电位差 / 浪涌源</text>
+  <!-- surge arrow field -> PC -->
+  <path d="M250,270 C300,230 250,180 210,150" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#surge)"/>
+  <text x="300" y="220" font-size="10" fill="#dc2626" font-weight="700">共模浪涌</text>
+  <!-- damaged PC -->
+  <line x1="150" y1="95" x2="210" y2="125" stroke="#dc2626" stroke-width="2.5"/>
+  <line x1="210" y1="95" x2="150" y2="125" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="180" y="345" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">倒灌烧毁 USB / 主板</text>
+
+  <!-- ============ RIGHT: WITH isolation (this board) ============ -->
+  <text x="500" y="56" text-anchor="middle" font-size="13" font-weight="700" fill="#15803d">✅ 本板 1500V 隔离</text>
+  <!-- PC box -->
+  <rect x="425" y="80" width="150" height="60" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="500" y="106" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">PC / 笔记本</text>
+  <text x="500" y="124" text-anchor="middle" font-size="10" fill="#1e40af">USB 口 · 主板芯片</text>
+  <!-- barrier -->
+  <line x1="500" y1="150" x2="500" y2="245" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <text x="500" y="146" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">⚡1500V</text>
+  <!-- field box -->
+  <rect x="425" y="250" width="150" height="62" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="500" y="276" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">工业现场 CAN</text>
+  <text x="500" y="294" text-anchor="middle" font-size="10" fill="#9a3412">ISO_GND 孤岛</text>
+  <!-- surge hits barrier and stops -->
+  <path d="M570,275 C615,235 575,185 525,158" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#surge)"/>
+  <text x="612" y="222" font-size="10" fill="#dc2626" font-weight="700">共模浪涌</text>
+  <!-- blocked marker -->
+  <circle cx="525" cy="158" r="9" fill="#16a34a"/>
+  <path d="M521,158 L529,158 M525,154 L525,162" stroke="#ffffff" stroke-width="2.5"/>
+  <text x="500" y="345" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">屏障阻断，PC 安然无恙</text>
+
+  <!-- bottom note -->
+  <text x="340" y="372" text-anchor="middle" font-size="11" fill="#374151">本质：把系统劈成两个电气孤岛，只让「信息」跨栅，不让「电流（地/电源）」跨栅</text>
+</svg>

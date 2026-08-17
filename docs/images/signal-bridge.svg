@@ -1,0 +1,45 @@
+<svg viewBox="0 0 680 256" width="100%" role="img">
+  <title>CAN 帧穿越 1500V 隔离屏障到达 PC 的数据流</title>
+  <desc>现场 CAN 帧经 SIT1051 收发、电容耦合数字隔离器跨过 1500V 屏障、由 HPM5321 桥接为 USB 封包送达 PC；屏障只过信号、不过电流。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect x="40" y="16" width="600" height="26" rx="13" fill="#185FA5"/>
+  <text x="340" y="29" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="13" font-weight="500" font-family="system-ui,sans-serif">信号桥接数据流：CAN 帧如何穿过隔离到达 PC</text>
+
+  <rect x="246" y="50" width="108" height="18" rx="6" fill="#ffffff" stroke="#A32D2D" stroke-width="0.8"/>
+  <text x="300" y="59" text-anchor="middle" dominant-baseline="central" fill="#A32D2D" font-size="10" font-weight="500" font-family="system-ui,sans-serif">1500V 隔离屏障</text>
+  <line x1="300" y1="68" x2="300" y2="156" stroke="#E24B4A" stroke-width="1.4" stroke-dasharray="7 4"/>
+
+  <rect x="40" y="80" width="100" height="56" rx="8" fill="#ffffff" stroke="#1D9E75" stroke-width="0.5"/>
+  <text x="90" y="102" text-anchor="middle" dominant-baseline="central" fill="#04342C" font-size="14" font-weight="500" font-family="system-ui,sans-serif">CAN 总线</text>
+  <text x="90" y="120" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-size="11" font-family="system-ui,sans-serif">现场节点</text>
+
+  <rect x="160" y="80" width="120" height="56" rx="8" fill="#ffffff" stroke="#1D9E75" stroke-width="0.5"/>
+  <text x="220" y="102" text-anchor="middle" dominant-baseline="central" fill="#04342C" font-size="14" font-weight="500" font-family="system-ui,sans-serif">SIT1051 收发</text>
+  <text x="220" y="120" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-size="11" font-family="system-ui,sans-serif">120Ω 终端</text>
+
+  <rect x="315" y="80" width="110" height="56" rx="8" fill="#ffffff" stroke="#1D9E75" stroke-width="0.5"/>
+  <text x="370" y="102" text-anchor="middle" dominant-baseline="central" fill="#04342C" font-size="14" font-weight="500" font-family="system-ui,sans-serif">CA-IS3742</text>
+  <text x="370" y="120" text-anchor="middle" dominant-baseline="central" fill="#0F6E56" font-size="11" font-family="system-ui,sans-serif">电容耦合隔离</text>
+
+  <rect x="445" y="72" width="175" height="72" rx="8" fill="#EEEDFE" stroke="#7F77DD" stroke-width="0.5"/>
+  <text x="532" y="98" text-anchor="middle" dominant-baseline="central" fill="#26215C" font-size="14" font-weight="500" font-family="system-ui,sans-serif">HPM5321 主控</text>
+  <text x="532" y="118" text-anchor="middle" dominant-baseline="central" fill="#534AB7" font-size="11" font-family="system-ui,sans-serif">CAN-FD ↔ USB 桥接</text>
+  <text x="532" y="134" text-anchor="middle" dominant-baseline="central" fill="#534AB7" font-size="11" font-family="system-ui,sans-serif">RISC-V 480 MHz</text>
+
+  <rect x="445" y="180" width="175" height="56" rx="8" fill="#E6F1FB" stroke="#378ADD" stroke-width="0.5"/>
+  <text x="532" y="202" text-anchor="middle" dominant-baseline="central" fill="#042C53" font-size="14" font-weight="500" font-family="system-ui,sans-serif">USB → PC 主机</text>
+  <text x="532" y="220" text-anchor="middle" dominant-baseline="central" fill="#185FA5" font-size="11" font-family="system-ui,sans-serif">480 Mbps HS</text>
+
+  <line x1="140" y1="108" x2="160" y2="108" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="280" y1="108" x2="295" y2="108" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="305" y1="108" x2="315" y2="108" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="425" y1="108" x2="445" y2="108" stroke="#7F77DD" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="532" y1="144" x2="532" y2="180" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <text x="308" y="172" text-anchor="middle" fill="#A32D2D" font-size="9" font-family="system-ui,sans-serif">信号过 · 电不过</text>
+</svg>

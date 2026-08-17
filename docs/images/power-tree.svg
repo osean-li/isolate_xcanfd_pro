@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 480" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="680" height="480" fill="#ffffff"/>
+  <text x="340" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#111827">电源树：系统侧 3.3V 与隔离侧 ISO_5V（两棵树靠隔离屏障断开）</text>
+
+  <!-- VBUS -->
+  <rect x="300" y="46" width="80" height="34" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="340" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">VBUS 5V</text>
+
+  <!-- barrier -->
+  <line x1="340" y1="90" x2="340" y2="446" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 5"/>
+  <rect x="296" y="90" width="88" height="22" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="1"/>
+  <text x="340" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#b91c1c">⚡1500V 隔离屏障</text>
+
+  <!-- LEFT branch: D3 -> LDO -> 3V3 -->
+  <path d="M340,80 L150,80 L150,104" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar)"/>
+  <rect x="108" y="104" width="84" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="150" y="121" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">D3 TVS</text>
+  <text x="150" y="135" text-anchor="middle" font-size="9" fill="#1e40af">SMF5.0CA</text>
+  <path d="M150,138 L150,162" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar)"/>
+  <rect x="103" y="162" width="94" height="36" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="150" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">ME6211 LDO</text>
+  <text x="150" y="194" text-anchor="middle" font-size="9" fill="#1e40af">5V→3.3V</text>
+  <path d="M150,198 L150,230" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="55" y1="232" x2="252" y2="232" stroke="#2563eb" stroke-width="2.5"/>
+  <circle cx="150" cy="232" r="4" fill="#2563eb"/>
+  <text x="260" y="236" font-size="12" font-weight="700" fill="#1e40af">3V3</text>
+
+  <!-- left consumers -->
+  <path d="M130,232 L130,282" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar)"/>
+  <path d="M245,232 L245,282" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar)"/>
+  <path d="M200,232 L200,354" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar)"/>
+  <rect x="70" y="282" width="120" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="130" y="309" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">U1 HPM5321</text>
+  <rect x="205" y="282" width="80" height="44" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="245" y="309" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">U5 系统侧</text>
+  <rect x="75" y="354" width="215" height="34" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="182" y="375" text-anchor="middle" font-size="11" fill="#1e40af">LED D1/D2 · CC 5.1k · 退耦电容</text>
+
+  <text x="150" y="430" text-anchor="middle" font-size="12" font-weight="700" fill="#374151">GND（系统地）</text>
+
+  <!-- RIGHT branch: B0505S -> ISO_5V -->
+  <path d="M340,80 L530,80 L530,104" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar)"/>
+  <rect x="478" y="104" width="104" height="34" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="530" y="121" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">B0505S</text>
+  <text x="530" y="135" text-anchor="middle" font-size="9" fill="#9a3412">隔离 DCDC</text>
+  <path d="M530,138 L530,162" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="455" y1="232" x2="640" y2="232" stroke="#ea580c" stroke-width="2.5"/>
+  <circle cx="530" cy="232" r="4" fill="#ea580c"/>
+  <text x="648" y="236" font-size="12" font-weight="700" fill="#9a3412">ISO_5V</text>
+
+  <!-- right consumers -->
+  <path d="M530,232 L530,282" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar)"/>
+  <path d="M645,232 L645,282" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar)"/>
+  <path d="M600,232 L600,354" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar)"/>
+  <rect x="470" y="282" width="120" height="44" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.2"/>
+  <text x="530" y="309" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">U3/U4 收发器</text>
+  <rect x="605" y="282" width="80" height="44" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.2"/>
+  <text x="645" y="309" text-anchor="middle" font-size="11" font-weight="700" fill="#9a3412">U5 隔离侧</text>
+  <rect x="470" y="354" width="215" height="34" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.2"/>
+  <text x="577" y="375" text-anchor="middle" font-size="11" fill="#9a3412">C22–C29 滤波</text>
+
+  <text x="540" y="430" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">ISO_GND（隔离地）</text>
+
+  <text x="340" y="468" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">✗ GND 与 ISO_GND 不连通 —— 隔离的物理体现</text>
+</svg>

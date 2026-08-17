@@ -1,0 +1,25 @@
+# ===== 项目本地数据（WorkBuddy 记忆等，勿提交；但项目级 skills 随仓库共享） =====
+.workbuddy/*
+!.workbuddy/skills/
+# 蒸馏过程中间产物（提取的 PDF 文本，体积大且可重新生成），不进仓库
+.workbuddy/skills/**/_distill/
+
+# ===== 操作系统 / 编辑器垃圾文件 =====
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*~
+*.swo
+
+# ===== 日志 =====
+*.log
+
+# ===== 固件二进制（如有，单独管理，不进仓库） =====
+# firmware/*.bin
+# firmware/*.hex
+
+# ===== 打包 / 临时产物 =====
+*.tmp
+*.bak

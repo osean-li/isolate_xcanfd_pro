@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 440" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="surgeR" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <rect width="680" height="440" fill="#ffffff"/>
+  <text x="340" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#111827">1500V 隔离边界：信号过、电不过</text>
+
+  <!-- barrier -->
+  <line x1="340" y1="60" x2="340" y2="408" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <text x="340" y="52" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c">⚡ 1500V</text>
+
+  <!-- LEFT: system side -->
+  <text x="150" y="78" text-anchor="middle" font-size="12" font-weight="700" fill="#1e40af">系统侧（PC / USB，GND）</text>
+  <rect x="78" y="150" width="150" height="62" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="153" y="178" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">U1 HPM5321</text>
+  <text x="153" y="196" text-anchor="middle" font-size="10" fill="#1e40af">片内 USB HS PHY · CAN-FD</text>
+  <text x="153" y="120" text-anchor="middle" font-size="11" fill="#374151">USB（PC）</text>
+  <path d="M153,128 L153,150" fill="none" stroke="#475569" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+  <!-- signal cross -->
+  <path d="M228,181 L300,181" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <path d="M380,181 L452,181" fill="none" stroke="#475569" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <rect x="300" y="161" width="80" height="40" rx="6" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="340" y="179" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">CA-IS3742</text>
+  <text x="340" y="193" text-anchor="middle" font-size="9" fill="#6d28d9">数字隔离器 4ch</text>
+
+  <!-- power cross -->
+  <path d="M153,262 L300,262" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar2)"/>
+  <path d="M380,262 L530,262" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar2)"/>
+  <rect x="300" y="242" width="80" height="40" rx="6" fill="#ffffff" stroke="#0891b2" stroke-width="1.5"/>
+  <text x="340" y="260" text-anchor="middle" font-size="11" font-weight="700" fill="#0e7490">B0505S</text>
+  <text x="340" y="274" text-anchor="middle" font-size="9" fill="#0e7490">隔离 DCDC</text>
+  <text x="150" y="300" text-anchor="middle" font-size="10" fill="#374151">3V3 / GND</text>
+
+  <!-- RIGHT: field side -->
+  <text x="535" y="78" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">隔离侧（CAN 现场，ISO_GND）</text>
+  <rect x="455" y="150" width="150" height="62" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="530" y="178" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">U3/U4 SIT1051</text>
+  <text x="530" y="196" text-anchor="middle" font-size="10" fill="#9a3412">CAN-FD 收发器 ×2</text>
+  <rect x="455" y="300" width="150" height="52" rx="8" fill="#ffedd5" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="530" y="324" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">CN1 / CN2</text>
+  <text x="530" y="342" text-anchor="middle" font-size="10" fill="#9a3412">CANH / CANL / ISO_GND</text>
+  <path d="M530,212 L530,300" fill="none" stroke="#ea580c" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <!-- CAN differential -->
+  <path d="M530,352 L610,352" fill="none" stroke="#ea580c" stroke-width="1.5" marker-end="url(#ar2)"/>
+  <text x="628" y="356" font-size="10" fill="#9a3412">现场总线</text>
+
+  <!-- grounds -->
+  <text x="153" y="400" text-anchor="middle" font-size="12" font-weight="700" fill="#374151">GND</text>
+  <text x="530" y="400" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">ISO_GND</text>
+  <text x="340" y="424" text-anchor="middle" font-size="12" font-weight="700" fill="#b91c1c">✗ GND 与 ISO_GND 不连通（电源地都断）</text>
+
+  <!-- common-mode surge blocked at barrier (purpose made visible) -->
+  <path d="M610,330 C560,300 470,290 372,270" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-dasharray="6 4" marker-end="url(#surgeR)"/>
+  <text x="560" y="312" font-size="10" fill="#dc2626" font-weight="700">共模浪涌</text>
+  <circle cx="372" cy="270" r="8" fill="#16a34a"/>
+  <path d="M368,270 L376,270 M372,266 L372,274" stroke="#ffffff" stroke-width="2.2"/>
+  <text x="430" y="408" text-anchor="middle" font-size="10" fill="#15803d">屏障阻断：现场浪涌到不了 PC</text>
+</svg>

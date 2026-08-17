@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPM5321 焊接图册 · 待焊元件实物对照</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1f2329; --sub:#5b6470;
+    --line:#e4e7ec; --accent:#2563eb; --warn:#dc2626; --ok:#16a34a; --chip:#fff7ed;
+    --dir:#7c3aed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.55;}
+  header{padding:22px 26px;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff}
+  header h1{margin:0 0 6px;font-size:22px}
+  header p{margin:0;opacity:.92;font-size:13px}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 22px 60px}
+  .tip{background:#eef4ff;border:1px solid #c7d9ff;color:#1e3a8a;
+    padding:12px 14px;border-radius:10px;font-size:13px;margin:16px 0}
+  .tip b{color:#1d4ed8}
+  .stage{margin:26px 0 8px}
+  .stage-h{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;
+    padding:8px 0;border-bottom:3px solid var(--accent);color:#1e3a8a}
+  .stage-h .n{background:var(--accent);color:#fff;border-radius:8px;padding:2px 10px;font-size:14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .ph{background:#f0f2f5;display:flex;align-items:center;justify-content:center;
+    min-height:170px;padding:10px;border-bottom:1px solid var(--line)}
+  .ph img{max-width:100%;max-height:200px;object-fit:contain;border-radius:6px}
+  .ph .nodata{color:var(--sub);text-align:center;font-size:13px;padding:18px}
+  .body{padding:11px 13px;flex:1}
+  .desig{font-weight:700;font-size:16px;color:var(--ink)}
+  .model{font-size:12px;color:var(--sub);margin:2px 0 8px}
+  .kv{font-size:12.5px;margin:3px 0}
+  .kv .k{color:var(--sub);display:inline-block;min-width:62px}
+  .badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:20px;font-weight:600;vertical-align:middle}
+  .b-dir{background:#f3e8ff;color:var(--dir)}
+  .b-nodir{background:#e7f6ec;color:var(--ok)}
+  .note{font-size:12px;background:var(--chip);border-left:3px solid #f59e0b;
+    padding:6px 8px;border-radius:0 6px 6px 0;margin-top:8px;color:#7c2d12}
+  .warn{border-left-color:var(--warn);background:#fdecec;color:#b91c1c}
+  pre.pin{background:#0f172a;color:#e2e8f0;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:11.5px;padding:10px;border-radius:8px;overflow:auto;margin:8px 0 0;line-height:1.4}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;margin:10px 0 0;color:var(--sub)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .d-dir{background:var(--dir)} .d-nodir{background:var(--ok)}
+  footer{color:var(--sub);font-size:12px;text-align:center;padding:8px 0 30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>HPM5321 焊接图册 · 待焊元件实物对照</h1>
+  <p>PCB：isolated XCANFD-PRO 20260117V1 ｜ 配套文档：soldering-guide.md / 待焊清单.md ｜ 生成 2026-08-16</p>
+</header>
+<div class="wrap">
+
+  <div class="tip">
+    <b>用法：</b>这是「待焊清单」的<b>看图版</b>。按 <b>同型号一次焊完</b> 分了 <b>组 1–组 8</b>——把每个型号从料盘一次性取齐，对照照片确认手里的料没错再焊。
+    标 <span class="badge b-dir">有方向</span> 的元件焊反会不工作，务必看「认 1 脚 / 阴极」一栏；标 <span class="badge b-nodir">无方向</span> 的可随便摆。
+    阶段 1（电源）与 USB1 已焊好，本图册只列<b>待焊 50 颗</b>。
+  </div>
+  <div class="legend">
+    <span><i class="dot d-dir"></i>有方向（共 12 颗：U1/U2/U3/U4/U5/D1/D2/D3/D4/D5/D6/SW1）</span>
+    <span><i class="dot d-nodir"></i>无方向（阻容 / 电感 / 端子等）</span>
+  </div>
+
+  <!-- ============ 组 1：电阻 ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">1</span>电阻（同型号一次取齐：R0603 / R0805 / R0402）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/0402WGF5101TCE.jpg" alt="R1-R4"></div>
+      <div class="body">
+        <div class="desig">R1–R4 <span class="vtag" style="background:#e0f2fe;color:#0369a1">5.1kΩ</span></div>
+        <div class="model">印字 5101 ×4 · R0603（料号 0603WAF5101T5E）</div>
+        <div class="kv"><span class="k">位号</span>R1、R2、R3、R4</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 电阻</div>
+        <div class="note warn">⚠️ 下图实为 <b>R10/R11 的 R0402（0402WGF5101TCE）</b>照。R1–R4 实际是 <b>R0603</b>（0603WAF5101T5E），比图里这颗<b>大一圈</b>；文件夹无 0603 电阻专用照，以下图作同值示意，实物按印字 5101 + 料盘确认。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/0402WGF5101TCE.jpg" alt="R5-R7"></div>
+      <div class="body">
+        <div class="desig">R5–R7 <span class="vtag" style="background:#fce7f3;color:#be185d">10kΩ</span></div>
+        <div class="model">印字 1002 ×3 · R0603（料号 0603WAF1002T5E）</div>
+        <div class="kv"><span class="k">位号</span>R5、R6、R7</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 电阻</div>
+        <div class="note warn">⚠️ 下图实为 <b>R10/R11 的 R0402（0402WGF5101TCE，印字 5101）</b>照，R5–R7 实际是 <b>R0603 10k</b>（0603WAF1002T5E，印字 1002），比图里这颗<b>大一圈</b>；文件夹无 10k 专用照，仅作同值示意，实物按印字 1002 + 料盘确认。（已补购，本板需焊）</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/0805W8F1200T5E.jpg" alt="R8/R9"></div>
+      <div class="body">
+        <div class="desig">R8、R9</div>
+        <div class="model">0805W8F1200T5E · 120Ω 终端电阻（印字 1200）</div>
+        <div class="kv"><span class="k">位号</span>R8、R9</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0805 电阻</div>
+        <div class="note">0805 比 0603 大一圈更好焊。CAN 终端电阻。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/0402WGF5101TCE.jpg" alt="R10/R11"></div>
+      <div class="body">
+        <div class="desig">R10、R11 <span class="vtag" style="background:#e0f2fe;color:#0369a1">5.1kΩ</span></div>
+        <div class="model">0402WGF5101TCE · 5.1kΩ USB CC 下拉（印字 5101，R0402）</div>
+        <div class="kv"><span class="k">位号</span>R10、R11</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0402 电阻（比 0603 还小）</div>
+        <div class="note">⚠️ 此照就是 R0402 真身。但 <b>R1–R4 也是 5.1k 却用的是 R0603</b>，别拿错盘！锡丝 0.4mm，镊子尖要细，送锡极少。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 2：电容（全 C0603） ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">2</span>电容（全 C0603，按印字 3 位一次分拣焊完）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CC0603KRX7R9BB104.jpg" alt="100nF"></div>
+      <div class="body">
+        <div class="desig">C8–C15、C17、C19、C24、C29</div>
+        <div class="model">100nF（印字 104）×12 颗</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 陶瓷电容</div>
+        <div class="note">各 IC 电源脚旁，看 PCB 丝印。<b>少一颗都可能抖</b>，焊一颗划掉一颗。（含阶段1已焊的 C3/C4/C5/C7，全板共 16 颗）</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CL10C220JB8NNNC.jpg" alt="C1/C2"></div>
+      <div class="body">
+        <div class="desig">C1、C2</div>
+        <div class="model">CL10C220JB8NNNC · 22pF（印字 220）</div>
+        <div class="kv"><span class="k">位号</span>C1、C2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 陶瓷电容</div>
+        <div class="note">晶振两端各一颗，0603 7 步法。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CL10A475KO8NNNC.jpg" alt="4.7uF"></div>
+      <div class="body">
+        <div class="desig">C16、C18</div>
+        <div class="model">4.7μF（印字 475）×2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 陶瓷电容</div>
+        <div class="note">电源轨滤波。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CL10A226MQ8NRNC.jpg" alt="C20/C21"></div>
+      <div class="body">
+        <div class="desig">C20、C21</div>
+        <div class="model">CL10A226MQ8NRNC · 22μF（印字 226）</div>
+        <div class="kv"><span class="k">位号</span>C20、C21</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 陶瓷电容</div>
+        <div class="note">对地「响」先判断哪端：响的是 GND 端就正常；VDD 内核端也响 = 真短路，先修。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CL10A105KB8NNNC.jpg" alt="1uF"></div>
+      <div class="body">
+        <div class="desig">C27、C28</div>
+        <div class="model">1μF（印字 105）×2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 陶瓷电容</div>
+        <div class="note">同 C22/C23（C22/C23 已在阶段 1 焊好）。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 3：电感 + 晶振 ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">3</span>电感 + 晶振（无源小件，无方向 / 无极性）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/SWPA252012S4R7MT.jpg" alt="L1"></div>
+      <div class="body">
+        <div class="desig">L1</div>
+        <div class="model">SWPA252012S4R7MT · 4.7μH 功率电感</div>
+        <div class="kv"><span class="k">位号</span>L1</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>功率电感 2520</div>
+        <div class="note">烙铁 320°C + 焊油，0603 7 步法。焊完蜂鸣测两端对地都不响为正常。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/XL2EL89C01-11YLC-24M.jpg" alt="X1"></div>
+      <div class="body">
+        <div class="desig">X1</div>
+        <div class="model">YXC XL2EL89 · 24MHz 无源晶振（3225-4P）</div>
+        <div class="kv"><span class="k">位号</span>X1</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span> 无极性</div>
+        <div class="kv"><span class="k">封装</span>CRYSTAL-SMD_4P-L3.2-W2.5</div>
+        <div class="note">✅ <b>已确认：1/3、2/4 脚等价，无极性，正着贴就行</b>——顶面 `YXC`/`24.000` 字符朝上正读摆正即可，不用找 1 脚。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/X1-PCB-view-user-shot-2026-08-15.png" alt="X1 PCB"></div>
+      <div class="body">
+        <div class="desig">X1 摆放依据</div>
+        <div class="model">你的 PCB 实物证据：4 个焊盘完全对称</div>
+        <div class="note">这是你发的板子 X1 位置，焊盘左右上下对称，进一步证明方向无所谓，正放即可。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/X1-LCSC-C5444545-datasheet-3view.png" alt="X1 datasheet"></div>
+      <div class="body">
+        <div class="desig">X1 数据手册三视图</div>
+        <div class="model">嘉立创 C5444545 / SZLCSC 6336541</div>
+        <div class="note">官方三视图：引脚图/焊盘图/3D 均显示 1 脚=左下（顶面圆点）。但<b>因无极性，本板正贴即可，无需对齐圆点</b>。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 4：二极管 / TVS / ESD / LED ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">4</span>二极管 / TVS / ESD / LED（保护 + 指示，有方向注意）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CJS530-E2.jpg" alt="D1/D2"></div>
+      <div class="body">
+        <div class="desig">D1、D2</div>
+        <div class="model">CJS530-E2 · LED 黄绿（TH）</div>
+        <div class="kv"><span class="k">位号</span>D1、D2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 长脚=阳极(+)</div>
+        <div class="kv"><span class="k">封装</span>LED-TH</div>
+        <div class="note">缺口/绿点端 = 阴极(-)。<b>先焊一颗上电看亮不亮确认方向，再焊另一颗</b>。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/SMF5.0CA.jpg" alt="D3"></div>
+      <div class="body">
+        <div class="desig">D3</div>
+        <div class="model">SMF5.0CA · TVS（SOD-123 小封装）</div>
+        <div class="kv"><span class="k">位号</span>D3</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 阴极 = 色环/横线端</div>
+        <div class="kv"><span class="k">封装</span>SOD-123</div>
+        <div class="note ok">✅ <b>封装已核对</b>：实物立创 C435453 / SMF5.0CA / SOD-123 / AnBon（安邦），与 BOM 完全一致。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/PESD1CAN.jpg" alt="D4/D5"></div>
+      <div class="body">
+        <div class="desig">D4、D5</div>
+        <div class="model">PESD1CAN · CAN ESD（SOT-23-3）×2</div>
+        <div class="kv"><span class="k">位号</span>D4、D5</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 阴极 = 横线/色环</div>
+        <div class="kv"><span class="k">封装</span>SOT-23-3</div>
+        <div class="note">3 焊盘涂油 → 对齐阴极 → 1 脚固定 → 对角 → 其余。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/USBLC6-2SC6.jpg" alt="D6"></div>
+      <div class="body">
+        <div class="desig">D6</div>
+        <div class="model">USBLC6-2SC6 · USB ESD（SOT-23-6）</div>
+        <div class="kv"><span class="k">位号</span>D6</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 1 脚圆点/缺角</div>
+        <div class="kv"><span class="k">封装</span>SOT-23-6</div>
+        <div class="note">6 焊盘涂油 → 认 1 脚 → 预上锡固定 → 对角(4) → 其余，每脚送锡极少。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 5：连接器 / 开关 / 排针 / 端子 ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">5</span>连接器 / 开关 / 排针 / 端子（结构件，平放好焊）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/FS-KC8S-AT25F.jpg" alt="SW1"></div>
+      <div class="body">
+        <div class="desig">SW1</div>
+        <div class="model">TS-KG89S-AT25F · 4 位拨码（SMD）</div>
+        <div class="kv"><span class="k">位号</span>SW1</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 数字 1 对应 PCB 丝印 1</div>
+        <div class="kv"><span class="k">封装</span>SMD 拨码</div>
+        <div class="note">对齐方向摆平 → 固定对角 2 脚 → 焊其余 → 拨到默认启动位（通常全 0 = Flash 启动）。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/DIP-02RP.jpg" alt="SW2"></div>
+      <div class="body">
+        <div class="desig">SW2</div>
+        <div class="model">DP-02RP · 2 位琴键（TH）</div>
+        <div class="kv"><span class="k">位号</span>SW2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>TH 直插</div>
+        <div class="note">TOP 面插入压到底 → 翻背面焊两引脚 → 焊接时别拨动开关体。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/X6511WW-08H-C60D30.jpg" alt="H1"></div>
+      <div class="body">
+        <div class="desig">H1</div>
+        <div class="model">X6511WV-08H · 调试排针 1×8（TH）</div>
+        <div class="kv"><span class="k">位号</span>H1</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>TH 排针</div>
+        <div class="note">可先插不焊，调试完再焊死。插入压垂直 → 翻背面逐针焊 → 检查垂直无歪。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/KF2EDGR-3.81-3P.jpg" alt="CN1/CN2"></div>
+      <div class="body">
+        <div class="desig">CN1、CN2</div>
+        <div class="model">KF2EDGR-3.81-3P · CAN 接线端子（TH）</div>
+        <div class="kv"><span class="k">位号</span>CN1、CN2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>3.81mm 间距 3P 端子</div>
+        <div class="note">所有贴片焊完后统一插焊，压到底贴板 → 翻背面逐针焊 → 与板垂直。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 6：隔离电源模块 U2 + C26 ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">6</span>隔离电源模块 U2（B0505S-1WR3）+ C26　🔑 焊完做隔离验证</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/B0505S-1WR3.jpg" alt="U2"></div>
+      <div class="body">
+        <div class="desig">U2</div>
+        <div class="model">B0505S-1WR3 · 隔离 DC-DC（PWRM 直插）</div>
+        <div class="kv"><span class="k">位号</span>U2</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 焊反不工作</div>
+        <div class="kv"><span class="k">引脚</span>1=VIN+5V 2=VIN-USB-GND 3=VOUT+隔离5V 4=VOUT-CAN-GND</div>
+        <div class="note">认 1 脚：顶面<b>白色小圆点</b>，圆点侧最靠左下的焊脚 = VIN+。对齐 PCB 丝印圆点/「1」。焊完测两侧地「不导通」= 隔离成立。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/CL10A106KP8NNNC.jpg" alt="C26"></div>
+      <div class="body">
+        <div class="desig">C26</div>
+        <div class="model">CL10A106KP8NNNC · 10μF（印字 106）</div>
+        <div class="kv"><span class="k">位号</span>C26</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-nodir">无方向</span></div>
+        <div class="kv"><span class="k">封装</span>0603 陶瓷电容</div>
+        <div class="note">紧贴 U2 输出侧（VOUT+/VOUT-）焊。10μF 全板只剩这一颗归组 6。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 7：隔离侧 IC（U5 + U3/U4） ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">7</span>隔离侧 IC（U5 隔离器 + U3/U4 收发器，同型号一起焊）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/SIT1051AT-3.jpg" alt="U3/U4"></div>
+      <div class="body">
+        <div class="desig">U3、U4</div>
+        <div class="model">SIT1051AT/3 · CAN-FD 收发器（SOP-8）×2</div>
+        <div class="kv"><span class="k">位号</span>U3、U4</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 1 脚圆点/缺口</div>
+        <div class="kv"><span class="k">引脚</span>1=TXD 2=GND 3=VCC 4=RXD 5=VIO 6=CANL 7=CANH 8=STB</div>
+        <div class="note">**同型号 ×2，一次取两颗一起焊完**。8 焊盘涂油 → 1 脚预上锡 → 对齐丝印 → 熔 1 脚固定 → 焊对角(5) → 其余 → 显微镜查无桥。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ph"><div class="nodata">⚠️ 仓库暂无你的 U5 实物照片<br>请焊前自己拍一张存档</div></div>
+      <div class="body">
+        <div class="desig">U5</div>
+        <div class="model">CA-IS3742HW · 数字隔离器（SOIC-16 宽体）</div>
+        <div class="kv"><span class="k">位号</span>U5</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 1 脚 = 左上角 VDDA</div>
+        <pre class="pin">1 VDDA   2 GNDA   3 VI1   4 VI2   5 VO3   6 VO4   7 ENA   8 GNDA
+┌────────────────────────────────────────────────┐ ← 圆点/缺口在左(1脚)
+│  U5  CA-IS3742  (A侧=MCU, B侧=CAN, 以走线为准) │
+└────────────────────────────────────────────────┘
+16 VDDB 15 GNDB 14 VO1 13 VO2 12 VI3 11 VI4 10 ENB 9 GNDB</pre>
+        <div class="note">16 脚密脚，比 SOP-8 更难，必须显微镜。它<b>跨隔离边界</b>，别让锡珠溅过隔离缝。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 组 8：主控 MCU U1 ============ -->
+  <div class="stage"><div class="stage-h"><span class="n">8</span>主控 MCU U1（HPM5321 QFN-48，最难最贵，最后焊）</div></div>
+  <div class="grid">
+    <div class="card">
+      <div class="ph"><img src="%E5%85%83%E5%99%A8%E4%BB%B6%E7%85%A7%E7%89%87/HPM5321IEG1.jpg" alt="U1"></div>
+      <div class="body">
+        <div class="desig">U1</div>
+        <div class="model">HPM5321IEG1 · QFN-48 主控（全板最难）</div>
+        <div class="kv"><span class="k">位号</span>U1</div>
+        <div class="kv"><span class="k">方向</span><span class="badge b-dir">有方向</span> 点标记/切口对齐 1 脚</div>
+        <div class="kv"><span class="k">封装</span>QFN-48（腹底 48 脚 + 散热焊盘）</div>
+        <div class="note">烙铁伸不进去，<b>必须热风枪 + 锡膏</b>。建议先拿废板练手感。加热 ≤90 秒。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip" style="margin-top:30px">
+    <b>提醒：</b>本图册是「看图版」辅助，完整参数、焊接步骤、上电自检请回到
+    <a href="soldering-guide.md">soldering-guide.md</a> 与 <a href="待焊清单.md">待焊清单.md</a>。
+    U5 实物照请焊前补拍后替换占位框。
+  </div>
+  <footer>HPM5321 高速隔离 USB-CAN FD 工具 · 焊接图册 · 2026-08-16</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg viewBox="0 0 680 366" width="680" height="366" xmlns="http://www.w3.org/2000/svg">
+  <title>USB HS-PHY 片内集成 vs 外置 PHY 对比</title>
+  <desc>左为需要外置 PHY 芯片的 MCU 方案，右为 HPM5321 片内集成 HS-PHY 的方案</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <text x="340" y="26" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">USB 物理层：片内 HS-PHY vs 外置 PHY</text>
+  <text x="180" y="54" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#993C1D">方案 A：外置 PHY（多数 MCU）</text>
+  <text x="500" y="54" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0F6E56">方案 B：HPM5321 片内集成</text>
+  <rect x="80" y="72" width="200" height="48" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <text x="180" y="97" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">MCU（无片内 HS-PHY）</text>
+  <rect x="80" y="148" width="200" height="56" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <text x="180" y="171" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">外置 PHY 芯片</text>
+  <text x="180" y="191" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#5F5E5A">如 USB3300（ULPI 接口）</text>
+  <rect x="80" y="238" width="200" height="44" rx="8" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <text x="180" y="261" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">USB Type-C 接口</text>
+  <line x1="180" y1="120" x2="180" y2="147" stroke="#993C1D" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="200" y="135" font-family="sans-serif" font-size="12" fill="#993C1D">ULPI ×12 线</text>
+  <line x1="180" y1="204" x2="180" y2="237" stroke="#993C1D" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="400" y="72" width="200" height="70" rx="8" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <text x="500" y="99" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">HPM5321</text>
+  <text x="500" y="121" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#5F5E5A">片内已集成 HS-PHY</text>
+  <rect x="400" y="238" width="200" height="44" rx="8" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <text x="500" y="261" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">USB Type-C 接口</text>
+  <line x1="500" y1="142" x2="500" y2="237" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="520" y="195" font-family="sans-serif" font-size="12" fill="#0F6E56">内部 PHY 直连</text>
+  <text x="180" y="312" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#993C1D">占 12 根 GPIO · BOM 多一颗 · 布线更繁</text>
+  <text x="500" y="312" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#0F6E56">无需外置 PHY · 省 GPIO · 故障点更少</text>
+  <text x="340" y="344" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#5F5E5A">左：MCU 无片内 HS-PHY，需外挂 USB3300（12 根 ULPI 线）；右：HPM5321 片内集成，DP/DM 直连 Type-C</text>
+</svg>

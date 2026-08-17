@@ -1,0 +1,33 @@
+<svg viewBox="0 0 680 360" width="100%" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>顶视图：系统侧与隔离侧的分割</title>
+<desc>左侧系统侧(GND/3V3)放 USB、MCU、LDO；右侧隔离侧(ISO_GND/ISO_5V)放 CAN 收发器与端子；中间 U5 数字隔离器与 U2 隔离 DC-DC 跨过 1500V 隔离栅，信号过、电不过。</desc>
+<rect x="24" y="70" width="262" height="210" rx="10" fill="#EAF3DE" stroke="#3B6D11" stroke-width="1.5"/>
+<text x="40" y="94" font-size="14" font-weight="500" fill="#173404">系统侧 (GND / 3V3)</text>
+<text x="40" y="118" font-size="12" fill="#27500A">USB1 (Type-C)</text>
+<text x="40" y="140" font-size="12" fill="#27500A">U1 HPM5321 (QFN48)</text>
+<text x="40" y="162" font-size="12" fill="#27500A">ME6211 LDO / D3 TVS</text>
+<text x="40" y="184" font-size="12" fill="#27500A">SW1 拨码 / H1 排针</text>
+<text x="40" y="206" font-size="12" fill="#27500A">D1/D2 LED / D6 ESD</text>
+<text x="40" y="262" font-size="11.5" fill="#3B6D11">铺铜网络：GND（系统地）</text>
+<rect x="394" y="70" width="262" height="210" rx="10" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+<text x="410" y="94" font-size="14" font-weight="500" fill="#042C53">隔离侧 (ISO_GND / ISO_5V)</text>
+<text x="410" y="118" font-size="12" fill="#0C447C">U3 / U4 SIT1051 收发器</text>
+<text x="410" y="140" font-size="12" fill="#0C447C">CN1 / CN2 接线端子</text>
+<text x="410" y="162" font-size="12" fill="#0C447C">D4 / D5 PESD1CAN</text>
+<text x="410" y="184" font-size="12" fill="#0C447C">R8 / R9 120Ω 终端 (SW2)</text>
+<text x="410" y="262" font-size="11.5" fill="#185FA5">铺铜网络：ISO_GND（隔离地）</text>
+<rect x="296" y="70" width="98" height="210" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="1.5"/>
+<line x1="345" y1="80" x2="345" y2="270" stroke="#A32D2D" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="345" y="60" font-size="11.5" fill="#791F1F" text-anchor="middle">1500V 隔离栅</text>
+<text x="345" y="120" font-size="11.5" fill="#501313" text-anchor="middle">U5</text>
+<text x="345" y="136" font-size="10" fill="#791F1F" text-anchor="middle">数字隔离</text>
+<text x="345" y="190" font-size="11.5" fill="#501313" text-anchor="middle">U2</text>
+<text x="345" y="206" font-size="10" fill="#791F1F" text-anchor="middle">隔离 DC-DC</text>
+<line x1="270" y1="125" x2="297" y2="125" stroke="#2C2C2A" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="150" y="40" font-size="13" font-weight="500" fill="#2C2C2A">信号过隔离器 (U5)，电源由隔离 DC-DC (U2) 跨栅供给</text>
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#2C2C2A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+</svg>

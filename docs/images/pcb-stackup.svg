@@ -1,0 +1,24 @@
+<svg viewBox="0 0 680 400" width="100%" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>HPM5321 隔离 USB-CAN FD 工具 四层板堆叠截面</title>
+<desc>自上而下：TOP(信号) / 介质 / Inner1(地平面 PLANE) / 介质 / Inner2(信号) / 介质 / BOTTOM(信号)。Inner1 整面 GND 参考平面，GND 与 ISO_GND 各自铺铜互不连通。</desc>
+<rect x="170" y="70" width="340" height="42" rx="5" fill="#EAF3DE" stroke="#3B6D11" stroke-width="1.5"/>
+<text x="182" y="90" font-size="14" font-weight="500" fill="#173404">TOP Layer — 信号层 (SIGNAL, id=1)</text>
+<text x="182" y="106" font-size="11.5" fill="#27500A">元件面：U1/U2/U3/U4/U5、USB1、CN1/CN2、SW1；USB DP/DM 90Ω 差分走此层</text>
+<rect x="170" y="114" width="340" height="9" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.5"/>
+<rect x="170" y="125" width="340" height="42" rx="5" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+<text x="182" y="145" font-size="14" font-weight="500" fill="#042C53">Inner1 — 内电层 / 平面 (PLANE, id=15)</text>
+<text x="182" y="161" font-size="11.5" fill="#0C447C">整面 GND 地平面：USB 差分线正下方连续回流，SI 优于 2 层板</text>
+<rect x="170" y="169" width="340" height="9" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.5"/>
+<rect x="170" y="180" width="340" height="42" rx="5" fill="#FAEEDA" stroke="#BA7517" stroke-width="1.5"/>
+<text x="182" y="200" font-size="14" font-weight="500" fill="#412402">Inner2 — 信号层 (SIGNAL, id=16)</text>
+<text x="182" y="216" font-size="11.5" fill="#633806">内层走线；GND / ISO_GND 隔离分割边界在此层与 TOP 共同成形</text>
+<rect x="170" y="224" width="340" height="9" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.5"/>
+<rect x="170" y="235" width="340" height="42" rx="5" fill="#FBEAF0" stroke="#993556" stroke-width="1.5"/>
+<text x="182" y="255" font-size="14" font-weight="500" fill="#4B1528">BOTTOM Layer — 信号层 (SIGNAL, id=2)</text>
+<text x="182" y="271" font-size="11.5" fill="#72243E">焊接面：剩余元件 + 走线，过孔连到各层</text>
+<rect x="24" y="300" width="632" height="86" rx="10" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<text x="38" y="322" font-size="13" font-weight="500" fill="#2C2C2A">来自工程真实图层 (getAllLayers) 的关键事实</text>
+<text x="38" y="343" font-size="11.5" fill="#444441">• Inner1 是 PLANE 类型 → 一整面铜做参考平面，不是走线层（这是选 4 层的核心收益）。</text>
+<text x="38" y="361" font-size="11.5" fill="#444441">• GND 与 ISO_GND 是两个独立网络、各自铺铜、互不连通 → 1500V 隔离在物理上成立。</text>
+<text x="38" y="379" font-size="11.5" fill="#444441">• Inner3–Inner16 均为模板层 (layerStatus=0 未使用)；Dielectric1/2/3 (id 361-363) 是层间介质。</text>
+</svg>

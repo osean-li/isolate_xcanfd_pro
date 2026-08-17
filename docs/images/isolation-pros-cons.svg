@@ -1,0 +1,65 @@
+<svg viewBox="0 0 680 430" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>CAN 适配器隔离 vs 非隔离拓扑对比</title>
+  <desc>左：非隔离，PC 与现场共享地，浪涌可沿 GND 倒灌烧 PC；右：隔离，1500V 屏障切断金属连接，浪涌被阻断</desc>
+  <defs>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#E24B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="340" y="28" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">隔离 vs 非隔离：地环路与共模浪涌</text>
+
+  <rect x="40" y="50" width="290" height="340" rx="12" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+  <text x="185" y="78" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#A32D2D">非隔离：地直连</text>
+
+  <rect x="95" y="95" width="180" height="58" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="185" y="118" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">电脑 / PC</text>
+  <text x="185" y="138" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="400" fill="#5F5E5A">USB 口（贵，怕浪涌）</text>
+
+  <rect x="95" y="320" width="180" height="55" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="185" y="342" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">CAN 设备 / 现场</text>
+  <text x="185" y="362" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="400" fill="#5F5E5A">地电位差 / 浪涌源</text>
+
+  <line x1="185" y1="153" x2="185" y2="320" stroke="#888780" stroke-width="2"/>
+  <text x="196" y="252" font-family="sans-serif" font-size="11" font-weight="400" fill="#5F5E5A">共享地 GND</text>
+
+  <path d="M 112 320 Q 60 236 112 153" fill="none" stroke="#E24B4A" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="48" y="240" font-family="sans-serif" font-size="11" font-weight="400" fill="#A32D2D">接地环路</text>
+
+  <line x1="160" y1="320" x2="160" y2="153" stroke="#E24B4A" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <line x1="150" y1="113" x2="170" y2="133" stroke="#A32D2D" stroke-width="2.5"/>
+  <line x1="170" y1="113" x2="150" y2="133" stroke="#A32D2D" stroke-width="2.5"/>
+  <text x="118" y="290" font-family="sans-serif" font-size="11" font-weight="400" fill="#A32D2D">浪涌倒灌</text>
+
+  <rect x="350" y="50" width="290" height="340" rx="12" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
+  <text x="495" y="78" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#3B6D11">隔离：1500V 屏障</text>
+
+  <rect x="405" y="95" width="180" height="58" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="495" y="118" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">电脑 / PC</text>
+  <text x="495" y="138" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="400" fill="#5F5E5A">系统侧 GND</text>
+
+  <rect x="405" y="320" width="180" height="55" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+  <text x="495" y="342" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="500" fill="#2C2C2A">CAN 设备 / 现场</text>
+  <text x="495" y="362" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="400" fill="#5F5E5A">隔离侧 ISO_GND</text>
+
+  <line x1="495" y1="160" x2="495" y2="318" stroke="#E24B4A" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="503" y="240" font-family="sans-serif" font-size="11" font-weight="400" fill="#A32D2D">1500V 隔离栅</text>
+
+  <rect x="455" y="183" width="80" height="34" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="495" y="200" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="500" fill="#042C53">U5 信号隔离</text>
+  <text x="495" y="215" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="400" fill="#0C447C">CA-IS3742</text>
+
+  <rect x="455" y="248" width="80" height="34" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+  <text x="495" y="265" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="500" fill="#412402">U2 电源隔离</text>
+  <text x="495" y="280" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="400" fill="#633806">B0505S</text>
+
+  <line x1="495" y1="153" x2="495" y2="160" stroke="#888780" stroke-width="2"/>
+  <line x1="495" y1="318" x2="495" y2="320" stroke="#888780" stroke-width="2"/>
+
+  <line x1="465" y1="320" x2="465" y2="296" stroke="#E24B4A" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+  <line x1="458" y1="299" x2="464" y2="305" stroke="#3B6D11" stroke-width="2.5"/>
+  <line x1="464" y1="305" x2="473" y2="294" stroke="#3B6D11" stroke-width="2.5"/>
+  <text x="478" y="300" font-family="sans-serif" font-size="11" font-weight="400" fill="#3B6D11">浪涌被阻断，护住 PC</text>
+
+  <text x="340" y="412" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="400" fill="#5F5E5A">隔离 = 切断 PC 与现场的金属连接（信号/电源都跨屏障）；不隔离 = 共享地，省钱但浪涌可倒灌烧 PC</text>
+</svg>
