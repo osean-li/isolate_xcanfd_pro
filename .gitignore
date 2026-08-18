@@ -1,8 +1,9 @@
-# ===== 项目本地数据（WorkBuddy 记忆等，勿提交；但项目级 skills 随仓库共享） =====
+# ===== 本地数据：WorkBuddy 记忆/状态（勿提交，仅本机） =====
+# 技能(Skill)统一存放在仓库根的 skills/，由 git 正常跟踪共享；
+# .workbuddy 仅存放本机记忆，全部忽略。
 .workbuddy/*
-!.workbuddy/skills/
 # 蒸馏过程中间产物（提取的 PDF 文本，体积大且可重新生成），不进仓库
-.workbuddy/skills/**/_distill/
+skills/**/_distill/
 
 # ===== 操作系统 / 编辑器垃圾文件 =====
 .DS_Store

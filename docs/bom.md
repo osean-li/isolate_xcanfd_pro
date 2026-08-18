@@ -5,11 +5,93 @@
 
 ## 总览（按功能区块）
 
-| 功能区块 | 主要物料 |
-| --- | --- |
-| 主控核心 (CORE) | U1 HPM5321、X1 24MHz、L1 4.7uH、退耦 / 滤波电容、电阻、SW1、H1、D1 / D2 |
-| USB 接口 (USB) | USB1 Type‑C、R10 / R11（CC）、D6（ESD） |
-| 电源 + CAN + 隔离 (CAN/POWER) | LDO1、U2 隔离 DC‑DC、U5 隔离器、U3 / U4 收发器、CN1 / CN2、R8 / R9、SW2、D3 / D4 / D5、滤波电容 |
+### 1. 主控核心 (CORE)
+> 职责：系统大脑，负责运行固件、USB 通信与 CAN‑FD 协议处理。
+
+主控核心区域局部布局如下：
+
+![主控核心区域](images/core-section-layout.png)
+
+- **U1**：HPM5321IEG1 主控 MCU（RISC‑V，USB 高速 + 2×CAN‑FD）
+- **X1** + **C1, C2**：24 MHz 主时钟晶振 + 22pF 负载电容
+- **L1** + **C20, C21**：内部 DC‑DC 功率电感（4.7uH）+ 内核电源滤波（22uF）
+- **C3–C15、C17、C19**：100nF 退耦电容（每电源脚旁一颗，3V3 域）
+- **C6 / C16、C18**：LDO 输入滤波（10uF）/ 3V3 域电源滤波（4.7uF）
+- **R1–R4**（5.1kΩ）：MCU 配置 / 上下拉；**R5–R7**（10kΩ）：上拉电阻
+- **SW1**：轻触按键（BOOT 按钮，复位上电瞬间按下进 ISP 模式）
+- **H1**：1×8 调试 / 烧录排针（连接 U1 调试 / 烧录引脚）
+- **D1, D2**：黄绿状态指示灯
+
+### 2. USB 接口 (USB)
+> 职责：Type‑C 取电 + USB 高速通信，带 ESD 防护。
+
+USB 接口区域局部布局如下：
+
+![USB 接口区域](images/usb-section-layout.png)
+
+- **USB1**：Type‑C 母座（取电 + 通信）
+- **R10, R11**：5.1kΩ CC1 / CC2 下拉电阻（Rd，识别电源角色）
+- **D6**：USBLC6‑2SC6，USB 接口 ESD 保护
+
+### 3. 电源 + CAN + 隔离 (POWER/CAN)
+> 职责：系统稳压、隔离供电，以及两路隔离 CAN‑FD 总线收发。
+
+电源、CAN 与隔离区域局部布局如下：
+
+![电源 + CAN + 隔离区域](images/power-can-isolation-section.png)
+
+- **LDO1**：5V → 3.3V 系统稳压（ME6211C33M5G‑N）
+- **U2**：B0505S‑1WR3 隔离 DC‑DC（5V → 隔离 5V，1500V 隔离耐压）
+- **U5**：CA‑IS3742HW 4 通道数字隔离器（MCU 侧 ↔ CAN 侧信号隔离）
+- **U3, U4**：SIT1051AT/3 CAN‑FD 收发器 ×2 通道
+- **CN1, CN2**：CAN 接线端子（CANH / CANL / GND）
+- **R8, R9**：120Ω CAN 终端电阻
+- **SW2**：2 位琴键开关（DP‑02RP，终端电阻切换——拨到 ON 接入 120Ω 终端匹配，拨到 OFF 断开，用于单 / 双节点组网时启用或关闭终端）
+- **D3**：SMF5.0CA TVS（5V 过压保护）；**D4, D5**：PESD1CAN（CAN 引脚 ESD）
+- **C22–C29**：隔离侧滤波——**C25, C26**（10uF）+ **C27, C28**（1uF）+ **C29**（100nF）为 B0505S 输入 / 输出三级滤波；**C22, C23**（1uF）、**C24**（100nF）为隔离侧退耦 / 滤波
+
+> **归属说明**：C6 服务于主控侧 3.3V（LDO1 输入滤波），因此归入 **主控核心 (CORE)**；C25、C26 服务于隔离后的 CAN 侧 5V（B0505S 输入 / 输出滤波），因此归入 **电源 / CAN 隔离 (POWER/CAN)**。二者分别位于隔离电源的两侧，供电域不同。
+
+## PCB 位号丝印图
+
+下图是 `Isolate XCANFD-PRO` 顶层丝印布局，标注了板上主要元器件的位号与位置：
+
+![Isolate XCANFD-PRO PCB 位号丝印图](images/pcb-silkscreen-layout.png)
+
+> 红色箭头所指为 PCB 左下角（原点 / 第 1 脚方向参考）。四个角为安装孔，板名下方标注版本号 `20260117V1`。
+
+## 位号对照表（按功能区块）
+
+| 位号 | 元器件 / 型号 | 功能说明 | 所在区块 |
+|------|--------------|----------|----------|
+| **U1** | HPM5321IEG1 | 主控 MCU（RISC‑V，USB 高速 + 2×CAN‑FD） | 主控核心 (CORE) |
+| **X1** | XL2EL89COI‑111YLC‑24M | 24 MHz 系统主时钟晶振 | 主控核心 (CORE) |
+| **C1, C2** | 22pF | 晶振负载电容 | 主控核心 (CORE) |
+| **L1** | SWPA252012S4R7MT (4.7uH) | 内部 DC‑DC 功率电感 | 主控核心 (CORE) |
+| **C20, C21** | 22uF | 内核电源滤波 | 主控核心 (CORE) |
+| **C3–C15、C17、C19** | 100nF | 各电源脚退耦电容 | 主控核心 (CORE) |
+| **C6** | 10uF | LDO 输入滤波 | 主控核心 (CORE) |
+| **C16、C18** | 4.7uF | 电源滤波 | 主控核心 (CORE) |
+| **R1–R4** | 5.1kΩ | MCU 配置 / 上下拉 | 主控核心 (CORE) |
+| **R5–R7** | 10kΩ | 上拉电阻 | 主控核心 (CORE) |
+| **SW1** | TS‑KG89S‑AT25F | 轻触按键（BOOT 按钮，复位上电瞬间按下进 ISP 模式） | 主控核心 (CORE) |
+| **H1** | X6511WV‑08H‑C60D30 | 1×8 调试 / 烧录排针 | 主控核心 (CORE) |
+| **D1, D2** | A694B/2SYG/S530‑E2 | 状态指示灯（黄绿 LED） | 主控核心 (CORE) |
+| **USB1** | TYPEC‑304‑BCP16 | Type‑C 母座（供电 + USB 通信） | USB 接口 (USB) |
+| **R10, R11** | 5.1kΩ | USB CC1 / CC2 下拉电阻（Rd） | USB 接口 (USB) |
+| **D6** | USBLC6‑2SC6 | USB 接口 ESD 保护 | USB 接口 (USB) |
+| **LDO1** | ME6211C33M5G‑N | 5V → 3.3V 系统 LDO 稳压 | 电源 / CAN 隔离 (POWER/CAN) |
+| **U2** | B0505S‑1WR3 | 隔离 DC‑DC（5V → 隔离 5V，耐压 1500V） | 电源 / CAN 隔离 (POWER/CAN) |
+| **U5** | CA‑IS3742HW | 4 通道数字隔离器（MCU 侧与 CAN 侧信号隔离） | 电源 / CAN 隔离 (POWER/CAN) |
+| **U3, U4** | SIT1051AT/3 | 两路 CAN‑FD 收发器 | 电源 / CAN 隔离 (POWER/CAN) |
+| **CN1, CN2** | KF2EDGR‑3.81‑3P | CAN 接线端子（CANH / CANL / GND） | 电源 / CAN 隔离 (POWER/CAN) |
+| **R8, R9** | 120Ω | CAN 总线终端匹配电阻 | 电源 / CAN 隔离 (POWER/CAN) |
+| **SW2** | DP‑02RP | 2 位琴键开关（终端电阻切换） | 电源 / CAN 隔离 (POWER/CAN) |
+| **D3** | SMF5.0CA | 5V 电源 TVS 浪涌 / 过压保护 | 电源 / CAN 隔离 (POWER/CAN) |
+| **D4, D5** | PESD1CAN | CAN 引脚 ESD 保护 | 电源 / CAN 隔离 (POWER/CAN) |
+| **C22, C23, C27, C28** | 1uF | 隔离侧滤波（C27, C28 为 B0505S 输出滤波） | 电源 / CAN 隔离 (POWER/CAN) |
+| **C24, C29** | 100nF | 隔离侧退耦（C29 为 B0505S 输出滤波） | 电源 / CAN 隔离 (POWER/CAN) |
+| **C25, C26** | 10uF | B0505S 输入 / 输出滤波 | 电源 / CAN 隔离 (POWER/CAN) |
 
 ## 完整清单
 
@@ -33,7 +115,7 @@
 | 16 | R5, R6, R7 | 3 | R0603 | 10kΩ | 0603WAF1002T5E | UNI‑ROYAL | C25804 | 上拉电阻 |
 | 17 | R8, R9 | 2 | R0805 | 120Ω | 0805W8F1200T5E | UNI‑ROYAL | C17437 | CAN 终端电阻 |
 | 18 | R10, R11 | 2 | R0402 | 5.1kΩ | 0402WGF5101TCE | UNI‑ROYAL | C25905 | USB CC1 / CC2 下拉（Rd） |
-| 19 | SW1 | 1 | SW‑SMD_4P | TS‑KG89S‑AT25F | TS‑KG89S‑AT25F | HANBO | C2874599 | 4 位拨码（BOOT / 配置） |
+| 19 | SW1 | 1 | SW‑SMD_4P | TS‑KG89S‑AT25F | TS‑KG89S‑AT25F | HANBO | C2874599 | 轻触按键（BOOT 按钮） |
 | 20 | SW2 | 1 | SW‑TH_DP‑02XP | DP‑02RP | DP‑02RP | 韩荣 | C129041 | 2 位琴键（终端电阻切换） |
 | 21 | U1 | 1 | QFN‑48 | HPM5321IEG1 | HPM5321IEG1 | HPMICRO | C49451867 | 主控 MCU（RISC‑V，USB 高速 + 2×CAN‑FD） |
 | 22 | U2 | 1 | PWRM‑TH | B0505S‑1WR3 | B0505S‑1WR3 | EVISUN | C7465178 | 隔离 DC‑DC（5V→隔离 5V，1500V） |
@@ -42,15 +124,3 @@
 | 25 | USB1 | 1 | USB‑C‑SMD | TYPEC‑304‑BCP16 | TYPEC‑304‑BCP16 | XUNPU | C720629 | Type‑C 母座（取电 + 通信） |
 | 26 | X1 | 1 | CRYSTAL‑SMD_4P | XL2EL89COI‑111YLC‑24M（24MHz） | XL2EL89COI‑111YLC‑24M | YXC | C5444545 | 系统主时钟晶振 |
 
-## 备注 / 勘误
-
-- **CAN 收发器型号**：本 BOM 实测为 **SIT1051AT/3**（芯力特）。主教程 HTML 中曾写作 SIT1042，二者引脚兼容、均为芯力特 CAN‑FD 收发器，以本 BOM 为准。
-- **电阻封装**：原 OSHWHub 公开 BOM 标注 R1–R7 为 0402，本 `_copy` 工程实际为 R0603（R1–R7）/ R0805（R8, R9）/ R0402（R10, R11），以本工程实测为准。
-- 所有立创料号（LCSC）均为「示例可替代」，实际下单以当时库存与价格为准；同参数、同封装的国产料基本可互换。
-- 完整电源 / 网络信息见 [`docs/tutorial.html`](tutorial.html) 第 4、10 章，或原 EDA 工程。
-
-## 待实物核对（2026-08-16 复查发现）
-
-- ✅ **D3 封装已确认**：第 9 行 SMF5.0CA / SOD‑123 / AnBon（安邦）/ 立创 C435453 正确；原照片文件名 `SMBJ5.0CA.jpg` 系命名笔误，已重命名为 `SMF5.0CA.jpg`，与 BOM 一致（2026-08-16 用户拍摄包装标签核对）。
-- ✅ **U1 型号已确认**：第 21 行 HPM5321IEG1 正确；原照片文件名 `HPM5321IEC1.jpg` 系命名笔误，已重命名为 `HPM5321IEG1.jpg` 与 BOM 一致（2026-08-16 用户确认）。
-- ℹ️ **照片文件名转录差异（非 BOM 错误）**：`SW1`（TS‑KG89S‑AT25F vs 照片 FS‑KC8S‑AT25F）、`H1`（X6511WV‑08H‑C60D30 vs 照片 X6511WW‑08H‑C60D30）、`X1`（XL2EL89COI‑111YLC‑24M vs 照片 XL2EL89C01‑11YLC‑24M）文件名与 BOM 型号有字符差异，疑似 OCR / 命名笔误（如 O↔0、I↔1、V↔W），功能件一致，焊前对照实物即可。

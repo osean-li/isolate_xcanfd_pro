@@ -70,7 +70,7 @@
 
 | 位号 | 名称 | 立创料号 | 数量 |
 | --- | --- | --- | --- |
-| SW1 | TS-KG89S-AT25F（**4 位拨码**，BOOT / 配置） | C2874599 | 1 |
+| SW1 | TS-KG89S-AT25F（**轻触按键**，BOOT 按钮） | C2874599 | 1 |
 | SW2 | DP-02RP（2 位琴键，**终端电阻切换**） | C129041 | 1 |
 | R1–R4 | 5.1kΩ（R0603） | C23186 | 4 |
 | R5–R7 | 10kΩ（R0603） | C25804 | 3 |
@@ -111,7 +111,7 @@
 | 已焊 | USB1 | TYPEC-304-BCP16（Type-C 母座，SMD） | [`元器件照片/TYPE-C-304-BCP16.jpg`](元器件照片/TYPE-C-304-BCP16.jpg) | 固定脚多，先点对角 |
 | 组1 | R10, R11 | 5.1kΩ（R0402，CC 下拉 Rd） | [`元器件照片/0402WGF5101TCE.jpg`](元器件照片/0402WGF5101TCE.jpg) | 0402 小，勿丢 |
 | 组4 | D6 | USBLC6-2SC6（USB ESD，SOT-23-6） | [`元器件照片/USBLC6-2SC6.jpg`](元器件照片/USBLC6-2SC6.jpg) | **⚠️ 有方向** |
-| 组5 | SW1 | TS-KG89S-AT25F（4 位拨码，BOOT） | [`元器件照片/FS-KC8S-AT25F.jpg`](元器件照片/FS-KC8S-AT25F.jpg) | SMD，方向无所谓但位置固定 |
+| 组5 | SW1 | TS-KG89S-AT25F（轻触按键，BOOT） | [`元器件照片/FS-KC8S-AT25F.jpg`](元器件照片/FS-KC8S-AT25F.jpg) | SMD，方向无所谓但位置固定 |
 | 组5 | SW2 | DP-02RP（2 位琴键，终端切换，TH） | [`元器件照片/DIP-02RP.jpg`](元器件照片/DIP-02RP.jpg) | 插件，最后 |
 | 组4 | D1, D2 | LED（黄绿，A694B/2SYG/S530-E2） | [`元器件照片/CJS530-E2.jpg`](元器件照片/CJS530-E2.jpg) | **长脚为正极** |
 | 组4 | D3 | SMF5.0CA（5V TVS，SOD-123） | [`元器件照片/SMF5.0CA.jpg`](元器件照片/SMF5.0CA.jpg) | 有方向 |
@@ -181,7 +181,7 @@
                 │     └─────────────────┘                    │
                 │                                            │
    [丝印]       │   X1            SW1      D1 D2             │
-   isolated     │   24MHz         4位拨码  LED               │
+   isolated     │   24MHz         轻触按键  LED               │
    XCANFD-PRO   │                                            │
    20260117V1   │  USB1 (Type-C)         CN1  CN2  U2 (插件) │   ← DC-DC 隔离
    @FanhaoCloud │   母座                 CAN×2  DC-DC         │
@@ -413,17 +413,17 @@
 
 > 大块头直插 / SMD 结构件，建议放在贴片基本焊完后再焊——板子一直能平放操作，不会压歪贴片。USB1 已焊，这里只复查。
 
-#### SW1（4 位拨码，TS-KG89S-AT25F，SMD）
+#### SW1（轻触按键，TS-KG89S-AT25F，SMD）
 
-![SW1 FS-KC8S-AT25F 4位拨码](元器件照片/FS-KC8S-AT25F.jpg)
+![SW1 TS-KG89S-AT25F 轻触按键](元器件照片/FS-KC8S-AT25F.jpg)
 
-> 4 位 SMD 拨码开关，**有方向**（丝印 1/2/3/4 对应 ON 位）。用于 BOOT / 配置。
+> SMD 轻触按键（4 脚，按下导通、松开断开）。作为 **BOOT 按钮**使用：按住上电进 ISP，松开从 Flash 启动。
 
 **焊接步骤（SMD 多脚，烙铁 + 焊油）**：
 1. 焊盘薄涂焊油。
-2. 对齐方向（数字 1 对应 PCB 丝印 1），摆上压平。
+2. 对齐焊盘，摆上压平。
 3. 先固定对角 2 脚 → 再焊其余脚。
-4. 焊完把拨码拨到**默认启动位**（通常全 0 = 从 Flash 启动，具体看 HPM5321 手册 BOOT 配置）。
+4. 焊完按下测试：**按下导通（BOOT0 拉高 → ISP），松开断开（BOOT0 低 → Flash 启动）**。
 
 #### SW2（2 位琴键，DP-02RP，TH）
 
@@ -469,7 +469,7 @@
 | 检查项 | 方法 | 期望 |
 | --- | --- | --- |
 | TH 插件贴板垂直 | 目视 / 直角尺 | 排针、端子、开关都垂直于板面，无歪斜 |
-| SW1 拨码位 | 对照 BOOT 配置 | 拨到正确启动位（通常全 0） |
+| SW1 按键 | 按下导通测试 | 按下 BOOT0=高（ISP），松开=低（Flash 启动） |
 | USB1 机械复查 | 插拔 USB 线测试 | 母座不松动、不翘起 |
 
 ---
@@ -676,7 +676,7 @@
 1. **HPM5321(QFN48) 的 USB 引脚在 LQFP100 才有**，**所以走串口烧录**（详见 [`docs/glossary.md` ISP](glossary.md)）
 2. 下载 [HPMicro Manufacturing Tool](http://www.hpmicro.com/)（HPMicro 官网资源页），准备 USB-TTL 串口模块（3.3V，别接 5V，会烧）
 3. 接线：USB-TTL 的 `TX → H1.RX`, `RX → H1.TX`, `GND → H1.GND`
-4. 按住板子 **BOOT 按键**（SW1 的某一位 / 丝印会标 BOOT）→ 接 USB → 松开
+4. 按住板子 **SW1（BOOT 按键）** → 接 USB 上电 → 出现 COM 口后松开
 5. Manufacturing Tool 检测到 COM 口 → 选 [`firmware/FDFW_20260201.bin`](../firmware/FDFW_20260201.bin) → 烧录
 6. **烧录成功** → 重启 → 插电脑 USB，**设备管理器出现 PCAN-USB** 设备（设备 ID `0x0BFD/0x0001` 或类似 PEAK 仿冒标识）
 
