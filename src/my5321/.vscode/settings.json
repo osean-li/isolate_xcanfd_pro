@@ -1,0 +1,17 @@
+{
+  "cmake.toolchainFile": "${workspaceFolder}/../sdk_env/hpm_sdk/cmake/toolchain.cmake",
+  "cmake.cmakePath": "${workspaceFolder}/../sdk_env/tools/cmake/bin/cmake.exe",
+  "cmake.generator": "Ninja",
+  "cmake.configureOnOpen": true,
+  "cmake.buildDirectory": "${workspaceFolder}/user_app/build",
+  "cmake.configureEnvironment": {
+    "HPM_SDK_BASE": "${workspaceFolder}/../sdk_env/hpm_sdk",
+    "GNURISCV_TOOLCHAIN_PATH": "${workspaceFolder}/../sdk_env/toolchains/rv32imac_zicsr_zifencei_multilib_b_ext-win/bin",
+    "PATH": "${workspaceFolder}/../sdk_env/tools/cmake/bin;${workspaceFolder}/../sdk_env/tools/ninja;${env:PATH}"
+  },
+  "cmake.configureArgs": [
+    "-DBOARD=my5321",
+    "-DBOARD_SEARCH_PATH=${workspaceFolder}/..",
+    "-DCMAKE_BUILD_TYPE=flash_xip"
+  ]
+}

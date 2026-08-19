@@ -1,0 +1,13 @@
+# Custom board for HPM5321 isolated USB-CAN FD adapter
+# 5321 属 HPM5300 系列，soc 用 HPM5300，openocd 脚本 hpm5300.cfg
+
+board:
+    soc: HPM5300            # 5321 属 HPM5300 系列
+    device: HPM5300xEMx
+    openocd-soc: hpm5300    # hpm_sdk/boards/openocd/soc/hpm5300.cfg
+    openocd-probe: ft2232   # 调试器；无调试器可留空或改 cmsis_dap/jlink
+    on-board-flash:
+      type: qspi-nor-flash
+      size: 16M             # 按实物 Flash 容量修改
+    feature:
+      - board_usb_otg
